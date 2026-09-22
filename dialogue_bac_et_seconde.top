@@ -1,0 +1,78 @@
+topic: ~educatee_dialog()
+language: frf
+
+# ====================================================================
+# TOPIC QICHAT - MÉMOIRE EDUCATEE POUR ROBOT NAO
+# Source exclusive : educatee.fr (par Cécile Cathelin)
+# ====================================================================
+
+# --- CONCEPTS (SYNONYMES ET MOTS CLÉS RECONNUS PAR NAO) ---
+concept:(salutations) [bonjour salut "coucou nao" "bonjour nao" "hey nao" "salut nao"]
+concept:(qui_es_tu) ["qui es-tu" "présente-toi" "c'est quoi ta mémoire" "d'où viennent tes cours" "c'est quoi educatée"]
+concept:(seconde) [seconde "la seconde" "cours de seconde" "programme de seconde" "l'odyssée du lecteur"]
+concept:(pourquoi_bac_seconde) ["pourquoi le bac en seconde" "pourquoi s'entraîner en seconde" "anticiper le bac en seconde" "conseil seconde"]
+concept:(bac) [bac "bac de français" "baccalauréat de français" "épreuves du bac" "programme de première" "le coin des premières"]
+concept:(commentaire) [commentaire "commentaire littéraire" "méthode du commentaire" "comment faire un commentaire" "to do list commentaire"]
+concept:(dissertation) [dissertation "dissertation littéraire" "méthode de la dissertation" "comment faire une dissertation" "phrases magiques"]
+concept:(oral) [oral "épreuve orale" "l'oral de français" "comment se passe l'oral" "lecture linéaire" "entretien de l'oral"]
+concept:(sarraute) [sarraute "nathalie sarraute" "pour un oui ou pour un non" "théâtre en première"]
+concept:(laboetie) ["la boétie" "la boetie" "étienne de la boétie" "servitude volontaire" "le contr'un" "littérature d'idées"]
+concept:(rimbaud) [rimbaud "arthur rimbaud" "cahiers de douai" "poésie en première"]
+concept:(chretien) ["chrétien de troyes" "chretien de troyes" "roman en première"]
+concept:(grammaire) [grammaire "points de grammaire" "question de grammaire" "flashcards de grammaire"]
+concept:(histoire_litt) ["histoire littéraire" "mouvements littéraires" "les lumières" "classicisme" "renaissance"]
+concept:(audio) [podcasts "ressources audio" "clapotee" "écouter les cours"]
+concept:(ia) ["intelligence artificielle" "ia" "chatgpt" "compagnons ia" "dcolle"]
+
+# --- DIALOGUES GESTUELS ET RÉPONSES VOCALES ---
+
+# Présentation
+u:(~qui_es_tu) ^start(animations/Stand/Gestures/Explain_1) Je suis NAO, votre répétiteur de français ! Toutes mes connaissances proviennent du site Educatée, conçu par Cécile Cathelin, professeure et créatrice des podcasts Clapotee. Je peux vous aider pour vos cours de seconde ou vous préparer au bac de français en première !
+
+# Salutations
+u:(~salutations) ^start(animations/Stand/Gestures/Hey_1) Bonjour ! Que souhaites-tu réviser aujourd'hui ? La seconde, le bac de français, ou une œuvre en particulier ?
+
+# Classe de Seconde : Généralités
+u:(~seconde) ^start(animations/Stand/Gestures/Explain_2) En classe de seconde, le projet d'Educatée s'appelle l'Odyssée du lecteur. Il allie l'amour de la lecture, l'étude des mythes et l'analyse d'œuvres comme le tableau Pandora d'Odilon Redon. Son but est de construire des bases solides pour le lycée.
+
+# Seconde : Pourquoi anticiper le Bac
+u:(~pourquoi_bac_seconde) ^start(animations/Stand/Gestures/Enthusiastic_4) Selon Educatée, s'entraîner dès la seconde a trois grands avantages : d'abord, minimiser le stress des examens futurs ; ensuite, améliorer son expression écrite et orale ; et enfin, progresser en continu grâce à des retours bienveillants !
+
+# Bac : Présentation globale
+u:(~bac) ^start(animations/Stand/Gestures/Explain_1) Le bac de français en première comporte deux épreuves : un écrit de quatre heures où tu choisis entre le commentaire et la dissertation, et un oral de vingt minutes avec une lecture linéaire, une question de grammaire et un entretien personnel.
+
+# Méthode : Commentaire
+u:(~commentaire) ^start(animations/Stand/Gestures/ShowSky_1) Pour réussir le commentaire, Educatée propose une To Do List complète. Elle te guide pour analyser le texte, repérer les figures de style, bâtir des axes d'étude et rédiger avec le mémento des formules pour bien écrire !
+
+# Méthode : Dissertation
+u:(~dissertation) ^start(animations/Stand/Gestures/Explain_3) Pour la dissertation, Educatée recommande la méthode Clapotee pour structurer tes trois parties, ainsi que le répertoire des phrases magiques pour enchaîner tes arguments avec élégance.
+
+# Méthode : Épreuve orale
+u:(~oral) ^start(animations/Stand/Gestures/BodyTalk_1) L'oral dure vingt minutes ! Douze points portent sur la lecture à voix haute, l'explication linéaire en trois mouvements et la grammaire. Les huit autres points évaluent ton entretien sur l'œuvre que tu as choisie dans l'année.
+
+# Œuvre : Nathalie Sarraute
+u:(~sarraute) ^start(animations/Stand/Gestures/Explain_2) Pour un oui ou pour un non de Nathalie Sarraute est au programme de théâtre. La pièce met en scène deux amis qui se déchirent pour une simple intonation. Educatée propose quatre lectures linéaires et un parcours associé avec Le Misanthrope de Molière.
+
+# Œuvre : La Boétie
+u:(~laboetie) ^start(animations/Stand/Gestures/Thinking_1) Le Discours de la servitude volontaire de La Boétie s'interroge sur la soumission au tyran. Sur Educatée, tu trouveras une carte mentale, une analyse pas à pas et une étude comparative avec Jean-Jacques Rousseau.
+
+# Œuvre : Rimbaud
+u:(~rimbaud) ^start(animations/Stand/Gestures/Enthusiastic_5) Les Cahiers de Douai de Rimbaud célèbrent la liberté et la fugue de jeunesse. Educatée analyse ses codes poétiques et propose un sujet guidé de dissertation pour savoir si ce recueil est une révolution poétique.
+
+# Œuvre : Chrétien de Troyes
+u:(~chretien) ^start(animations/Stand/Gestures/Explain_1) Chrétien de Troyes représente l'objet d'étude sur le roman. Ses récits explorent l'aventure chevaleresque et l'amour courtois au Moyen Âge. Educatée propose quatre lectures linéaires pour l'épreuve orale.
+
+# Grammaire et langue
+u:(~grammaire) ^start(animations/Stand/Gestures/ShowFloor_1) Pour la grammaire, Educatée met à disposition des flashcards interactives adaptées aux exigences de seconde et de première, notamment pour briller sur la question de grammaire à l'oral.
+
+# Histoire Littéraire
+u:(~histoire_litt) ^start(animations/Stand/Gestures/Explain_2) La règle d'or d'Educatée est : sans l'Histoire, on ne peut pas comprendre la Littérature ! Le site propose quinze cours vidéo retraçant l'évolution de la Renaissance au vingtième siècle pour éclairer vos dissertations.
+
+# Podcasts et Audio
+u:(~audio) ^start(animations/Stand/Gestures/Listening_1) Cécile Cathelin a créé les podcasts Clapotee. Ils offrent des synthèses claires pour réviser dans les transports les grandes œuvres de Rabelais, Voltaire, Balzac, Rimbaud et Sarraute.
+
+# Intelligence Artificielle
+u:(~ia) ^start(animations/Stand/Gestures/Thinking_3) Sur Educatée, l'intelligence artificielle est vue comme un outil complémentaire. Elle peut aider à réviser ou stimuler les idées, mais toujours avec esprit critique et sans paresse intellectuelle !
+
+# Relance si question non comprise
+u:(e:Dialog/NotUnderstood) ^start(animations/Stand/Gestures/Confused_1) Je n'ai pas bien compris. Tu peux me questionner sur le programme de seconde, les épreuves du bac, la méthode de la dissertation, ou les œuvres comme Rimbaud, La Boétie et Sarraute !
