@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 """
 nao_assistant.py
@@ -17,20 +17,20 @@ Architecture :
     - Assistant       : orchestre le tout : écoute -> recherche connaissance -> Mistral -> réponse.
 
 Prérequis :
-    pip install requests
+    Python 2.7 (fourni avec le SDK NAOqi / Choregraphe 2.5)
     # Pour piloter un vrai robot NAO, le SDK NAOqi Python doit être installé
     # et disponible sur la machine (voir doc SoftBank Robotics). Ce script
     # importe 'naoqi' de façon paresseuse et ne plante pas si absent.
 
 Variables d'environnement :
-    MISTRAL_API_KEY   : clé API Mistral (obligatoire pour utiliser le cerveau IA)
+    Mistral_API       : clé API Mistral (obligatoire pour utiliser le cerveau IA)
 
 Utilisation :
     # Mode texte (sans robot), pour tester la logique de bout en bout :
-    python nao_assistant.py --text-mode --kb knowledge_base.json
+    python main.py --text-mode
 
     # Mode robot NAO réel :
-    python nao_assistant.py --robot-ip 192.168.1.42 --robot-port 9559 --kb knowledge_base.json
+    python main.py --robot-ip 192.168.1.42 --robot-port 9559
 """
 
 import os
@@ -39,15 +39,68 @@ import json
 import argparse
 import difflib
 import logging
-from typing import List, Dict, Optional
-
-import requests
+import codecs
+import urllib2
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 logger = logging.getLogger("nao_assistant")
+
+
+# Ressources livrées avec ce programme. Le chemin absolu permet de lancer le
+# script depuis n'importe quel dossier Windows.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_KB_PATH = os.path.join(BASE_DIR, "nao_knowledge_base.json")
+MISTRAL_ENV_VAR = "Mistral_API"
+
+
+def get_mistral_api_key():
+    """Lit la clé Mistral depuis l'environnement du processus Windows.
+
+    Windows ne distingue pas la casse des variables d'environnement, mais ce
+    repli rend également le comportement fiable si le script est lancé depuis
+    un autre environnement. ``MISTRAL_API_KEY`` reste accepté pour ne pas
+    casser une configuration plus ancienne.
+    """
+    for name in (MISTRAL_ENV_VAR, "MISTRAL_API_KEY"):
+        value = os.environ.get(name)
+        if value and value.strip():
+            return value.strip()
+
+    accepted_names = set((MISTRAL_ENV_VAR.lower(), "mistral_api_key"))
+    for name, value in os.environ.items():
+        if name.lower() in accepted_names and value and value.strip():
+            return value.strip()
+
+    # Si la variable vient d'être créée avec ``setx``, un terminal déjà ouvert
+    # ne l'a pas encore reçue dans son environnement. Sous Windows, on relit
+    # alors les emplacements utilisateur et système du registre.
+    if os.name == "nt":
+        try:
+            import _winreg as winreg
+            registry_locations = (
+                (winreg.HKEY_CURRENT_USER, r"Environment"),
+                (winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\Session Manager\Environment"),
+            )
+            for hive, subkey in registry_locations:
+                key = winreg.OpenKey(hive, subkey)
+                try:
+                    for name in (MISTRAL_ENV_VAR, "MISTRAL_API_KEY"):
+                        try:
+                            value, _ = winreg.QueryValueEx(key, name)
+                            if value and value.strip():
+                                return value.strip()
+                        except EnvironmentError:
+                            continue
+                finally:
+                    winreg.CloseKey(key)
+        except EnvironmentError:
+            # Accès refusé ou registre indisponible : l'environnement courant
+            # reste la seule source disponible.
+            pass
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -81,19 +134,19 @@ class KnowledgeBase:
     les clés : id, theme, triggers, reponse_courte, reponse_longue, extra.
     """
 
-    def __init__(self, path: str):
+    def __init__(self, path):
         self.path = path
-        self.entries: List[Dict] = []
-        self.robot_identity: Dict = {}
-        self.almemory_keys: Dict[str, str] = {}
+        self.entries = []
+        self.robot_identity = {}
+        self.almemory_keys = {}
         self._load()
 
-    def _load(self) -> None:
+    def _load(self):
         if not os.path.exists(self.path):
             logger.warning("Base de connaissances introuvable : %s (base vide utilisée)", self.path)
             return
 
-        with open(self.path, "r", encoding="utf-8") as f:
+        with codecs.open(self.path, "r", "utf-8") as f:
             data = json.load(f)
 
         self.robot_identity = data.get("robot_identity", {})
@@ -131,7 +184,7 @@ class KnowledgeBase:
             len(self.entries), len(self.almemory_keys),
         )
 
-    def _score(self, question: str, entry: Dict) -> float:
+    def _score(self, question, entry):
         """Calcule un score de similarité simple entre la question posée
         et une entrée de la base (thème + déclencheurs)."""
         question_l = question.lower()
@@ -149,7 +202,7 @@ class KnowledgeBase:
             best = max(best, ratio)
         return best
 
-    def search(self, question: str, top_k: int = 3, min_score: float = 0.3) -> List[Dict]:
+    def search(self, question, top_k=3, min_score=0.3):
         """Retourne les `top_k` entrées les plus pertinentes pour la question posée."""
         scored = [(self._score(question, e), e) for e in self.entries]
         scored.sort(key=lambda t: t[0], reverse=True)
@@ -157,7 +210,7 @@ class KnowledgeBase:
         logger.debug("Recherche connaissance pour '%s' -> %d résultat(s)", question, len(results))
         return results
 
-    def get_almemory_snapshot(self) -> Dict[str, str]:
+    def get_almemory_snapshot(self):
         """Retourne les clés/valeurs à pousser dans ALMemory au démarrage."""
         return dict(self.almemory_keys)
 
@@ -171,16 +224,17 @@ class MistralBrain:
 
     API_URL = "https://api.mistral.ai/v1/chat/completions"
 
-    def __init__(self, api_key: Optional[str] = None, model: str = "mistral-small-latest"):
-        self.api_key = api_key or os.environ.get("MISTRAL_API_KEY")
+    def __init__(self, api_key=None, model="mistral-small-latest"):
+        self.api_key = api_key.strip() if api_key and api_key.strip() else get_mistral_api_key()
         self.model = model
         if not self.api_key:
             logger.warning(
-                "Aucune clé MISTRAL_API_KEY trouvée : le cerveau IA fonctionnera "
-                "en mode dégradé (réponse brute de la base de connaissances)."
+                "Aucune clé %s trouvée : le cerveau IA fonctionnera "
+                "en mode dégradé (réponse brute de la base de connaissances).",
+                MISTRAL_ENV_VAR,
             )
 
-    def _build_system_prompt(self, robot_identity: Optional[Dict] = None) -> str:
+    def _build_system_prompt(self, robot_identity=None):
         base = (
             "Tu es le cerveau conversationnel d'un robot humanoïde NAO. "
             "Tu réponds en français, en une ou deux phrases courtes, sur un ton "
@@ -197,26 +251,24 @@ class MistralBrain:
             nom = robot_identity.get("nom", "NAO")
             role = robot_identity.get("role", "")
             source = robot_identity.get("source_exclusive", "")
-            base += (
-                f"\n\nTon identité : tu es {nom}. Ton rôle : {role}. "
-                f"Ta source de connaissances exclusive est : {source}."
-            )
+            base += "\n\nTon identité : tu es {}. Ton rôle : {}. ".format(nom, role)
+            base += "Ta source de connaissances exclusive est : {}.".format(source)
         return base
 
     def answer(
         self,
-        question: str,
-        context_entries: List[Dict],
-        robot_identity: Optional[Dict] = None,
-        verbose: bool = False,
-    ) -> str:
+        question,
+        context_entries,
+        robot_identity=None,
+        verbose=False,
+    ):
         """Harmonise une réponse finale à partir de la question et du contexte
         récupéré dans la base de connaissances."""
         context_lines = []
         for e in context_entries:
             theme = e.get("theme", "")
             reponse = e.get("reponse_longue" if verbose else "reponse_courte", "")
-            context_lines.append(f"- [{theme}] {reponse}")
+            context_lines.append("- [{}] {}".format(theme, reponse))
         context_txt = "\n".join(context_lines)
 
         fallback_key = "reponse_longue" if verbose else "reponse_courte"
@@ -229,11 +281,11 @@ class MistralBrain:
             return "Je n'ai pas encore de réponse à cette question."
 
         user_content = (
-            f"Question posée au robot : {question}\n\n"
-            f"Contexte issu de la base de connaissances du robot :\n"
-            f"{context_txt if context_txt else '(aucune information trouvée)'}\n\n"
+            "Question posée au robot : {}\n\n"
+            "Contexte issu de la base de connaissances du robot :\n"
+            "{}\n\n"
             "Formule la réponse finale que le robot doit prononcer."
-        )
+        ).format(question, context_txt if context_txt else "(aucune information trouvée)")
 
         payload = {
             "model": self.model,
@@ -245,16 +297,19 @@ class MistralBrain:
             "max_tokens": 200,
         }
         headers = {
-            "Authorization": f"Bearer {self.api_key}",
+            "Authorization": "Bearer {}".format(self.api_key),
             "Content-Type": "application/json",
         }
 
         try:
-            resp = requests.post(self.API_URL, headers=headers, json=payload, timeout=15)
-            resp.raise_for_status()
-            data = resp.json()
+            request = urllib2.Request(self.API_URL, json.dumps(payload), headers)
+            response = urllib2.urlopen(request, timeout=15)
+            try:
+                data = json.load(response)
+            finally:
+                response.close()
             return data["choices"][0]["message"]["content"].strip()
-        except requests.RequestException as exc:
+        except (urllib2.URLError, urllib2.HTTPError, ValueError, KeyError, IndexError) as exc:
             logger.error("Erreur appel API Mistral : %s", exc)
             if context_entries:
                 return context_entries[0].get(fallback_key, "Je n'ai pas de réponse à te donner.")
@@ -271,7 +326,7 @@ class NaoInterface:
     bascule automatiquement en mode texte (entrée clavier / sortie console),
     ce qui permet de tester toute la logique de l'assistant sans robot."""
 
-    def __init__(self, ip: Optional[str] = None, port: int = 9559, force_text_mode: bool = False):
+    def __init__(self, ip=None, port=9559, force_text_mode=False):
         self.ip = ip
         self.port = port
         self.text_mode = force_text_mode or not ip
@@ -282,9 +337,9 @@ class NaoInterface:
         if not self.text_mode:
             self._connect_robot()
 
-    def _connect_robot(self) -> None:
+    def _connect_robot(self):
         try:
-            from naoqi import ALProxy  # type: ignore  # SDK NAOqi (Python 2, robots physiques)
+            from naoqi import ALProxy  # SDK NAOqi (Python 2, robots physiques)
         except ImportError:
             logger.warning(
                 "Module 'naoqi' introuvable. Passage en mode texte. "
@@ -302,7 +357,7 @@ class NaoInterface:
             logger.error("Impossible de se connecter au robot (%s). Passage en mode texte.", exc)
             self.text_mode = True
 
-    def push_knowledge_to_almemory(self, almemory_keys: Dict[str, str]) -> None:
+    def push_knowledge_to_almemory(self, almemory_keys):
         """Pousse les paires clé/valeur de la base de connaissances dans
         ALMemory du robot, pour qu'elles soient accessibles à d'autres
         comportements NAOqi (Choregraphe, etc.). Sans effet en mode texte."""
@@ -315,20 +370,20 @@ class NaoInterface:
                 logger.warning("Impossible d'écrire la clé ALMemory '%s' : %s", key, exc)
         logger.info("%d clés poussées dans ALMemory", len(almemory_keys))
 
-    def say(self, text: str) -> None:
+    def say(self, text):
         """Fait parler le robot (ou affiche le texte en mode texte)."""
         logger.info("Réponse : %s", text)
         if self.text_mode:
-            print(f"[NAO dit] {text}")
+            print("[NAO dit] {}".format(text))
         else:
             self.tts.say(text)
 
-    def listen(self) -> str:
+    def listen(self):
         """Récupère une question, soit via reconnaissance vocale NAO,
         soit via saisie clavier en mode texte."""
         if self.text_mode:
             try:
-                return input("Question (Ctrl+C pour quitter) > ").strip()
+                return raw_input("Question (Ctrl+C pour quitter) > ").strip()
             except EOFError:
                 return ""
         # NOTE : une intégration complète de ALSpeechRecognition nécessite de
@@ -358,13 +413,13 @@ class Assistant:
     connaissances, fait harmoniser la réponse par Mistral, puis fait parler
     le robot."""
 
-    def __init__(self, robot: NaoInterface, kb: KnowledgeBase, brain: MistralBrain, verbose: bool = False):
+    def __init__(self, robot, kb, brain, verbose=False):
         self.robot = robot
         self.kb = kb
         self.brain = brain
         self.verbose = verbose
 
-    def handle_question(self, question: str) -> str:
+    def handle_question(self, question):
         if not question:
             return ""
         context = self.kb.search(question)
@@ -374,10 +429,10 @@ class Assistant:
         self.robot.say(answer)
         return answer
 
-    def run(self) -> None:
+    def run(self):
         self.robot.push_knowledge_to_almemory(self.kb.get_almemory_snapshot())
         nom = self.kb.robot_identity.get("nom", "NAO")
-        self.robot.say(f"Bonjour, je suis {nom}, prêt à répondre à tes questions sur le français.")
+        self.robot.say("Bonjour, je suis {}, prêt à répondre à tes questions sur le français.".format(nom))
         try:
             while True:
                 question = self.robot.listen()
@@ -394,18 +449,24 @@ class Assistant:
 # ---------------------------------------------------------------------------
 # 5. Point d'entrée
 # ---------------------------------------------------------------------------
-def parse_args() -> argparse.Namespace:
+def parse_args():
     parser = argparse.ArgumentParser(description="Assistant NAO avec base de connaissances et cerveau Mistral")
     parser.add_argument("--robot-ip", type=str, default=None, help="Adresse IP du robot NAO")
     parser.add_argument("--robot-port", type=int, default=9559, help="Port NAOqi (défaut : 9559)")
     parser.add_argument("--text-mode", action="store_true", help="Forcer le mode texte (sans robot)")
-    parser.add_argument("--kb", type=str, default="knowledge_base.json", help="Chemin vers la base de connaissances JSON")
+    parser.add_argument(
+        "--kb", type=str, default=DEFAULT_KB_PATH,
+        help="Chemin vers la base de connaissances JSON (défaut : nao_knowledge_base.json livré avec le programme)",
+    )
     parser.add_argument("--mistral-model", type=str, default="mistral-small-latest", help="Modèle Mistral à utiliser")
-    parser.add_argument("--mistral-api-key", type=str, default=None, help="Clé API Mistral (sinon variable d'env MISTRAL_API_KEY)")
+    parser.add_argument(
+        "--mistral-api-key", type=str, default=None,
+        help="Clé API Mistral (sinon variable d'environnement Windows Mistral_API)",
+    )
     return parser.parse_args()
 
 
-def main() -> None:
+def main():
     args = parse_args()
 
     kb = KnowledgeBase(args.kb)
