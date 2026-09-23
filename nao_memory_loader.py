@@ -14,6 +14,12 @@ import os
 import json
 import argparse
 
+# Compatibilité Python 2 et 3 pour la saisie console
+try:
+    input = raw_input  # type: ignore
+except NameError:
+    pass
+
 # Chemin des ressources locales
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 KB_JSON_PATH = os.path.join(BASE_DIR, "nao_knowledge_base.json")
@@ -30,29 +36,29 @@ def connect_and_inject_nao(ip="127.0.0.1", port=9559):
     Connecte le script au robot NAO via NAOqi et injecte la mémoire Educatee.
     """
     try:
-        from naoqi import ALProxy
+        from naoqi import ALProxy  # type: ignore
     except ImportError:
         print("[AVERTISSEMENT] Module 'naoqi' introuvable sur cette machine.")
         print("[INFO] Basculement automatique en mode SIMULATION locale.\n")
         return run_local_simulation()
 
-    print(f"[INFO] Connexion au robot NAO à l'adresse {ip}:{port}...")
+    print("[INFO] Connexion au robot NAO à l'adresse {}:{}...".format(ip, port))
     try:
         memory = ALProxy("ALMemory", ip, port)
         tts = ALProxy("ALTextToSpeech", ip, port)
         dialog = ALProxy("ALDialog", ip, port)
     except Exception as e:
-        print(f"[ERREUR] Impossible de se connecter au robot : {e}")
+        print("[ERREUR] Impossible de se connecter au robot : {}".format(e))
         print("[INFO] Lancement de la simulation locale.\n")
         return run_local_simulation()
 
     kb = load_local_knowledge()
     keys = kb.get("almemory_keys", {})
 
-    print(f"[INFO] Injection de {len(keys)} clés de connaissances dans ALMemory...")
+    print("[INFO] Injection de {} clés de connaissances dans ALMemory...".format(len(keys)))
     for key, value in keys.items():
         memory.insertData(key, value)
-        print(f"  + ALMemory['{key}'] OK")
+        print("  + ALMemory['{}'] OK".format(key))
 
     # Configuration de la langue et voix
     try:
@@ -67,12 +73,12 @@ def connect_and_inject_nao(ip="127.0.0.1", port=9559):
             topic_name = dialog.loadTopic(QICHAT_TOP_PATH)
             dialog.activateTopic(topic_name)
             dialog.subscribe("EducateeDialog")
-            print(f"[INFO] Topic QiChat '{topic_name}' chargé et activé avec succès dans ALDialog !")
+            print("[INFO] Topic QiChat '{}' chargé et activé avec succès dans ALDialog !".format(topic_name))
         except Exception as e:
-            print(f"[ERREUR] Échec du chargement QiChat : {e}")
+            print("[ERREUR] Échec du chargement QiChat : {}".format(e))
 
     welcome = "Bonjour ! Ma mémoire a été mise à jour avec les cours de seconde et du bac de français depuis le site Educatée."
-    print(f"[NAO TTS] {welcome}")
+    print("[NAO TTS] {}".format(welcome))
     try:
         tts.say(welcome)
     except Exception:
@@ -93,10 +99,10 @@ def run_local_simulation():
     print("=" * 65)
     print("      SIMULATION DE MÉMOIRE POUR ROBOT NAO (EDUCATEE)")
     print("=" * 65)
-    print(f"Robot       : {kb['robot_identity']['nom']} ({kb['robot_identity']['role']})")
-    print(f"Source      : {kb['robot_identity']['source_exclusive']}")
-    print(f"Clés mémoire: {len(memory_keys)} clés disponibles")
-    print(f"Intents vocaux: {len(qa_list)} thématiques prêtes")
+    print("Robot       : {} ({})".format(kb['robot_identity']['nom'], kb['robot_identity']['role']))
+    print("Source      : {}".format(kb['robot_identity']['source_exclusive']))
+    print("Clés mémoire: {} clés disponibles".format(len(memory_keys)))
+    print("Intents vocaux: {} thématiques prêtes".format(len(qa_list)))
     print("=" * 65)
     print("Commandes disponibles :")
     print("  - Tapez un mot-clé ou une question (ex: 'bac', 'seconde', 'sarraute', 'oral')")
@@ -117,7 +123,7 @@ def run_local_simulation():
         if user_input == "cles":
             print("\n--- CLÉS ALMEMORY DISPONIBLES ---")
             for k, v in memory_keys.items():
-                print(f"[{k}] : {v[:75]}...")
+                print("[{}] : {}...".format(k, v[:75]))
             print()
             continue
 
@@ -133,7 +139,7 @@ def run_local_simulation():
 
         if match:
             print("\n[NAO - Synthèse Vocale TTS] :")
-            print(f"\"{match['nao_tts_long']}\"\n")
+            print('"{}"\n'.format(match['nao_tts_long']))
         else:
             print("\n[NAO - Synthèse Vocale TTS] :")
             print("\"Je n'ai pas bien compris. Tu peux me questionner sur le programme de seconde, les épreuves du bac, la méthode de dissertation, ou les œuvres comme Rimbaud, La Boétie et Sarraute !\"\n")

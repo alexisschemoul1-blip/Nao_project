@@ -284,7 +284,7 @@ class NaoInterface:
 
     def _connect_robot(self) -> None:
         try:
-            from naoqi import ALProxy  # SDK NAOqi (Python 2, robots physiques)
+            from naoqi import ALProxy  # type: ignore  # SDK NAOqi (Python 2, robots physiques)
         except ImportError:
             logger.warning(
                 "Module 'naoqi' introuvable. Passage en mode texte. "
