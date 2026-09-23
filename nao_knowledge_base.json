@@ -11,6 +11,13 @@
     "Educatee/Meta/Source": "educatee.fr par Cécile Cathelin",
     "Educatee/Meta/Ouvrage": "Vous allez aimer réussir votre bac de français (Éditions Ellipses)",
     "Educatee/Meta/Podcasts": "Plateforme audio CLAPOTEE",
+    "Educatee/Meta/Auteure": "Cécile Cathelin, professeure de Lettres Modernes depuis 26 ans (11 ans en collège/lycée, en lycée depuis 2011), fondatrice de CLAPOTEE et EDUCATEE, membre de l'association EdTechFrance, trésorière du collectif LE 106, auteure pour les éditions Belin Éducation, Ellipses et Vuibert, fondatrice de l'association Héraclion.",
+    "Educatee/Contact/Adresse": "26 rue Émile Zola, 37000 Tours.",
+    "Educatee/Contact/Telephone": "06 87 61 02 47",
+    "Educatee/Contact/Email": "cecilecathelin@educatee.fr",
+    "Educatee/Outils/Dictionnaire": "Dictionnaire en ligne Le Robert (dictionnaire.lerobert.com/fr/), recommandé pour vérifier l'orthographe, trouver les mots justes et enrichir son vocabulaire.",
+    "Educatee/Lecture/Booktrailers": "Booktrailers réalisés pour les Éditions Belin afin de donner envie de découvrir des œuvres marquantes : La Boétie, Chrétien de Troyes, Hugo, Zola, Racine, Tolstoï, Corneille, Maupassant, Graffigny, Fontenelle, Grumberg, Colette, Jules Verne, Claire de Duras, et une anthologie de poétesses.",
+    "Educatee/Organisation/Agenda": "L'agenda des classes permet de visualiser en un coup d'œil les créneaux de cours de chaque semaine et de mieux organiser le travail à venir.",
     "Educatee/Seconde/Devise": "Parce que l'on ne peut que réussir lorsque que l'on sait où l'on va !",
     "Educatee/Seconde/Projet": "L'Odyssée du lecteur",
     "Educatee/Seconde/AnticipationBac": "S'entraîner dès la classe de seconde permet d'acquérir de la confiance, de maîtriser le contenu en profondeur et d'identifier ses points forts et ses axes d'amélioration.",
@@ -51,6 +58,82 @@
         "Auteure : Cécile Cathelin, créatrice des podcasts CLAPOTEE",
         "Ouvrage associé : Vous allez aimer réussir votre bac de français aux éditions Ellipses"
       ]
+    },
+    {
+      "id": "bio_cecile_cathelin",
+      "theme": "Presentation",
+      "triggers": [
+        "qui est cécile cathelin",
+        "qui a créé educatee",
+        "ta créatrice",
+        "ton auteure",
+        "parle moi de ta créatrice"
+      ],
+      "nao_tts_short": "Cécile Cathelin est professeure de Lettres Modernes depuis vingt-six ans. Elle a créé les podcasts CLAPOTEE et le site EDUCATEE pour offrir des contenus gratuits aux lycéens.",
+      "nao_tts_long": "Cécile Cathelin est professeure de Lettres Modernes depuis vingt-six ans, en lycée depuis 2011. Elle a créé la plateforme de podcasts CLAPOTEE et le site EDUCATEE pour offrir des contenus éducatifs gratuits permettant aux jeunes de travailler à leur rythme. Elle est membre de l'association EdTechFrance, trésorière du collectif LE 106, auteure pour les éditions Belin, Ellipses et Vuibert, et fondatrice de l'association Héraclion.",
+      "source_url": "https://www.educatee.fr/a-propos/"
+    },
+    {
+      "id": "contact_educatee",
+      "theme": "Contact",
+      "triggers": [
+        "contact",
+        "où es-tu",
+        "où est educatee",
+        "adresse",
+        "numéro de téléphone",
+        "comment te contacter"
+      ],
+      "nao_tts_short": "Educatée est basé à Tours, au 26 rue Émile Zola. Vous pouvez contacter Cécile Cathelin par email à cecilecathelin arobase educatee point fr.",
+      "nao_tts_long": "Educatée se trouve à Tours, au 26 rue Émile Zola, code postal 37000. Vous pouvez joindre Cécile Cathelin par téléphone au 06 87 61 02 47, ou par email à cecilecathelin arobase educatee point fr.",
+      "source_url": "https://www.educatee.fr/"
+    },
+    {
+      "id": "outil_dictionnaire",
+      "theme": "Outils",
+      "triggers": [
+        "dictionnaire",
+        "chercher un mot",
+        "vérifier l'orthographe",
+        "définition d'un mot",
+        "sens d'un mot"
+      ],
+      "nao_tts_short": "Pour vérifier l'orthographe ou trouver le sens d'un mot, Educatée recommande le dictionnaire en ligne Le Robert.",
+      "nao_tts_long": "Educatée met à disposition un dictionnaire en ligne, celui du Robert, pour enrichir le vocabulaire, vérifier l'orthographe et bien comprendre le sens des mots et des expressions. C'est un outil précieux à utiliser à la maison comme en classe.",
+      "ressource": "dictionnaire.lerobert.com/fr/",
+      "source_url": "https://www.educatee.fr/le-dictionnaire-pour-mieux-travailler/"
+    },
+    {
+      "id": "booktrailers_lecture",
+      "theme": "Lecture plaisir",
+      "triggers": [
+        "booktrailer",
+        "vous allez aimer lire",
+        "envie de lire",
+        "conseils de lecture",
+        "quel livre lire"
+      ],
+      "nao_tts_short": "La rubrique Vous allez aimer lire propose des booktrailers pour donner envie de découvrir de grandes œuvres, comme celles de Zola, Racine ou Victor Hugo.",
+      "nao_tts_long": "Dans la rubrique Vous allez aimer lire, Cécile Cathelin a réalisé pour les éditions Belin des booktrailers qui donnent envie de découvrir des œuvres marquantes : La Boétie, Chrétien de Troyes, Victor Hugo, Émile Zola, Jean Racine, Tolstoï, Corneille, Maupassant, Colette ou encore Jules Verne. C'est une autre façon d'entrer dans la lecture.",
+      "auteurs_presentes": [
+        "La Boétie", "Chrétien de Troyes", "Victor Hugo", "Émile Zola",
+        "Jean Racine", "Tolstoï", "Corneille", "Maupassant", "Graffigny",
+        "Fontenelle", "Grumberg", "Colette", "Jules Verne", "Claire de Duras"
+      ],
+      "source_url": "https://www.educatee.fr/vous-allez-aimer-lire/"
+    },
+    {
+      "id": "agenda_classes",
+      "theme": "Organisation",
+      "triggers": [
+        "agenda des classes",
+        "emploi du temps",
+        "planning des cours",
+        "créneaux de cours"
+      ],
+      "nao_tts_short": "L'agenda des classes permet de visualiser en un coup d'œil les créneaux de cours de la semaine.",
+      "nao_tts_long": "La rubrique Agenda des classes d'Educatée permet de visualiser en un coup d'œil les créneaux de cours de chaque semaine et de mieux organiser son travail à venir.",
+      "source_url": "https://www.educatee.fr/agenda/"
     },
     {
       "id": "seconde_presentation",
