@@ -20,7 +20,7 @@ Contrairement à un document textuel classique ou un JSON brut, un robot NAO imp
 | **`nao_knowledge_base.json`** | JSON NAOqi | Base de connaissances complète : clés `almemory_keys`, intents vocaux, réponses courtes et détaillées TTS, et repères pédagogiques. |
 | **`dialogue_bac_et_seconde.top`** | QiChat (`.top`) | Script de dialogue natif pour le module `ALDialog` de NAO, avec concepts, déclencheurs oraux et gestuelle associée. |
 | **`nao_memory_loader.py`** | Script Python | Script d'injection automatique dans `ALMemory` / `ALDialog`, intégrant également un mode simulation autonome sur PC. |
-| **`README_NAO.md`** | Markdown | Documentation d'intégration et guide d'utilisation. |
+
 
 ---
 
@@ -93,17 +93,3 @@ python nao_memory_loader.py --simu
 4. Reliez l'entrée au démarrage du comportement : NAO est prêt à dialoguer avec les élèves !
 
 ---
-
-## 🗣️ Exemples d'interactions vocales avec NAO
-
-- **Élève :** *"NAO, présente-toi."*  
-  **NAO :** *"Bonjour ! Je suis NAO, votre assistant pédagogique pour les cours de français au lycée. Toutes mes connaissances sont issues du site Educatée, conçu par la professeure Cécile Cathelin. Je peux vous guider pour le programme de seconde, ou vous entraîner pour le baccalauréat de français en première !"*
-
-- **Élève :** *"Pourquoi s'entraîner dès la seconde pour le bac ?"*  
-  **NAO :** *"Sur Educatée, Cécile Cathelin explique que s'entraîner dès la seconde apporte trois grands atouts. Premièrement : minimiser le stress des examens futurs. Deuxièmement : obtenir de meilleures performances à l'oral et à l'écrit. Et troisièmement : bénéficier de feedbacks réguliers pour progresser en toute confiance !"*
-
-- **Élève :** *"Que faut-il savoir sur Rimbaud ?"*  
-  **NAO :** *"Dans la séquence poésie, les Cahiers de Douai illustrent la fougue rimbaldienne. Sur Educatée, vous découvrirez ses codes poétiques, quatre lectures linéaires, un sujet de dissertation pas à pas demandant si ce recueil représente une révolution poétique, complété par les séries audio de Sylvain Tesson sur France Inter."*
-
-- **Élève :** *"Donne-moi un conseil pour la dissertation."*  
-  **NAO :** *"La méthode de dissertation sur Educatée repose sur trois piliers : d'abord, la To Do List pour analyser le sujet et construire sa problématique ; ensuite, la méthode Clapotee pour structurer les parties ; et enfin, le répertoire des phrases magiques pour rédiger des transitions impeccables !"*
