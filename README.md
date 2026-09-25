@@ -1,95 +1,169 @@
-# Module Mémoire EDUCATEE pour Robot NAO (SoftBank Robotics / NAOqi)
+# Module mémoire EDUCATEE pour robot NAO
 
-Ce dossier contient l'ensemble des connaissances extraites **exclusivement du site [educatee.fr](https://www.educatee.fr)** (conçu par Cécile Cathelin) reformatées et optimisées pour servir de **mémoire et de base de dialogue à un robot humanoïde NAO**.
+Ce projet a pour objectif de transformer les contenus pédagogiques du site [educatee.fr](https://www.educatee.fr) en une mémoire exploitable par un robot NAO.
 
----
+Il fournit :
+- une base de connaissances structurée au format JSON,
+- un script Python pour injecter les données dans `ALMemory`,
+- un dialogue QiChat compatible avec `ALDialog`,
+- une simulation locale pour tester les réponses sans robot physique.
 
-## 🤖 Pourquoi ce formatage spécifique pour NAO ?
-
-Contrairement à un document textuel classique ou un JSON brut, un robot NAO impose des contraintes robotiques et vocales précises :
-1. **Diction et Text-to-Speech (TTS) :** Suppression totale des liens hypertextes bruts (`http...`) et de la ponctuation complexe inaudible pour le moteur vocal de NAO (`ALTextToSpeech` / `ALAnimatedSpeech`).
-2. **Architecture ALMemory :** Découpage sous forme de clés mémoires hiérarchiques (`Educatee/Bac/...`, `Educatee/Seconde/...`) injectables directement dans le tableau noir partagé de NAOqi.
-3. **Moteur conversationnel QiChat :** Fichier natif `.top` intégrant la reconnaissance d'intentions vocales, des concepts de synonymes et des animations gestuelles (`^start(...)`) synchronisées avec la parole.
-
----
-
-## 📂 Contenu du dossier `mémoire_educatee_vf`
-
-| Fichier | Format | Rôle pour NAO |
-| :--- | :--- | :--- |
-| **`nao_knowledge_base.json`** | JSON NAOqi | Base de connaissances complète : clés `almemory_keys`, intents vocaux, réponses courtes et détaillées TTS, et repères pédagogiques. |
-| **`dialogue_bac_et_seconde.top`** | QiChat (`.top`) | Script de dialogue natif pour le module `ALDialog` de NAO, avec concepts, déclencheurs oraux et gestuelle associée. |
-| **`nao_memory_loader.py`** | Script Python | Script d'injection automatique dans `ALMemory` / `ALDialog`, intégrant également un mode simulation autonome sur PC. |
-
+Le but est de permettre à NAO de répondre à des questions sur la seconde et le bac de français, en s'appuyant sur une base de connaissances fiable et organisée.
 
 ---
 
-## 🧠 Clés mémoires injectées dans `ALMemory`
+## Objectif du projet
 
-Toutes les informations essentielles sont enregistrées sous l'arborescence `Educatee/` :
+Le robot NAO ne lit pas directement des documents texte classiques comme un humain. Il a besoin d'une mémoire structurée, adaptée à son environnement technique :
 
+- `ALMemory` pour stocker des informations sous forme de clés hiérarchiques,
+- `ALDialog` pour gérer des échanges oraux via QiChat,
+- `ALTextToSpeech` pour parler clairement et naturellement,
+- des contenus nettoyés pour être lisibles par la voix du robot.
+
+Ce projet prépare précisément cette mémoire en réorganisant les contenus pédagogiques dans un format exploitable par NAO.
+
+---
+
+## Structure du dépôt
+
+```text
+Nao_project/
+├── README.md
+├── main.py
+├── nao_memory_loader.py
+├── nao_knowledge_base.json
+├── dialogue_bac_et_seconde.top
+└── ...
 ```
+
+### Fichiers principaux
+
+- `nao_knowledge_base.json` : base de connaissances complète, sous forme de clés `ALMemory` et de réponses pédagogiques.
+- `dialogue_bac_et_seconde.top` : script de dialogue en QiChat pour `ALDialog`.
+- `nao_memory_loader.py` : script d'injection de la mémoire sur le robot ou en simulation locale.
+- `main.py` : assistant conversationnel Python qui détecte les mots-clés locaux puis fait appel à Mistral si nécessaire.
+
+---
+
+## Exemple de données mémorisées
+
+Les clés sont rangées sous une arborescence de type :
+
+```text
 Educatee/
 ├── Meta/
-│   ├── Source                    -> "educatee.fr par Cécile Cathelin"
-│   ├── Ouvrage                   -> "Vous allez aimer réussir votre bac de français (Ellipses)"
-│   └── Podcasts                  -> "Plateforme audio CLAPOTEE"
 ├── Seconde/
-│   ├── Projet                    -> "L'Odyssée du lecteur"
-│   ├── Devise                    -> "Parce que l'on ne peut que réussir lorsque que l'on sait où l'on va !"
-│   ├── AnticipationBac           -> "Importance de s'entraîner dès la 2nde..."
-│   ├── PiliersReussite           -> "Minimiser le stress, améliorer l'expression, feedbacks..."
-│   ├── SupportsCours             -> "Odyssée 2nde, rentrée et mythes, Pandora de Redon..."
-│   ├── Grammaire                 -> "Points fondamentaux de 2nde (Flashcards)..."
-│   └── LecturesAudio             -> "Du Bellay, Racine, Zola..."
+│   ├── Projet
+│   ├── Devise
+│   ├── AnticipationBac
+│   ├── PiliersReussite
+│   └── SupportsCours
 └── Bac/
-    ├── Epreuves                  -> "Écrit de 4h et oral de 20min..."
-    ├── Methode/Commentaire       -> "To Do List et mémento de formules..."
-    ├── Methode/Dissertation      -> "Méthode Clapotee et phrases magiques..."
-    ├── Methode/Oral              -> "Lecture linéaire en 3 temps, grammaire et entretien..."
-    ├── Oral/Bordereau            -> "Grille d'évaluation officielle 2022..."
+    ├── Epreuves
+    ├── Methode/
     └── Oeuvres/
-        ├── Sarraute              -> "Pour un oui ou pour un non (théâtre / Molière)"
-        ├── LaBoetie              -> "Discours de la servitude volontaire (idées / Rousseau)"
-        ├── Rimbaud               -> "Cahiers de Douai (poésie / révolution poétique)"
-        └── ChretienDeTroyes      -> "Roman arthurien et aventure courtoise"
 ```
+
+Cela permet au robot d'accéder rapidement à des informations comme :
+- les objectifs de la classe de seconde,
+- les épreuves du bac,
+- la méthode de commentaire, dissertation et oral,
+- les œuvres étudiées.
 
 ---
 
-## 🚀 Comment déployer la mémoire sur NAO ?
+## Fonctionnement
 
-### Méthode 1 : Via le script Python `nao_memory_loader.py`
+### 1. Injection dans la mémoire NAO
 
-#### Sur le robot réel (ou simulateur Choregraph / robot virtuel) :
+Le script `nao_memory_loader.py` permet d'envoyer les données dans `ALMemory` et de charger le topic QiChat dans `ALDialog`.
+
+### 2. Dialogue oral
+
+Le fichier `dialogue_bac_et_seconde.top` définit les intentions, concepts et déclencheurs du robot. Il permet de gérer les interactions vocales avec un élève.
+
+### 3. Simulation locale
+
+Si aucun robot NAO n'est accessible, le script peut tourner en mode simulation sur ordinateur pour tester les réponses textuelles et la logique de détection de mots-clés.
+
+---
+
+## Prérequis
+
+- Python 3
+- Accès à un robot NAO avec NAOqi (optionnel)
+- `naoqi` si vous voulez vous connecter au vrai robot
+- Optionnel : une clé API Mistral pour le mode assistant IA dans `main.py`
+
+---
+
+## Utilisation
+
+### Option 1 : charger la mémoire sur un robot NAO
+
 ```bash
 python nao_memory_loader.py --ip <IP_DU_ROBOT_NAO> --port 9559
 ```
-*Le script se connecte au robot, injecte les clés dans `ALMemory`, compile le topic QiChat dans `ALDialog` et fait prononcer une phrase d'accueil à NAO.*
 
-#### En simulation locale sur ordinateur (sans robot branché) :
+Le script :
+- se connecte au robot,
+- injecte les clés dans `ALMemory`,
+- charge le topic QiChat dans `ALDialog`,
+- prononce un message d'accueil.
+
+### Option 2 : lancer la simulation locale
+
 ```bash
 python nao_memory_loader.py --simu
 ```
 
----
+Cette commande lance une simulation console pour tester la logique de réponse locale.
 
-### Méthode 2 : Dans le logiciel Choregraphe (SoftBank Robotics)
+### Option 3 : utiliser l'assistant Python
 
-1. Ouvrez votre projet dans **Choregraphe**.
-2. Créez une boîte **Set Data** ou **Python Script** :
-   ```python
-   class MyClass(GeneratedClass):
-       def onInput_onStart(self):
-           import json
-           memory = ALProxy("ALMemory")
-           with open("nao_knowledge_base.json", "r") as f:
-               data = json.load(f)
-           for k, v in data["almemory_keys"].items():
-               memory.insertData(k, v)
-           self.onStopped()
-   ```
-3. Glissez une boîte **Dialog** et importez le fichier `dialogue_bac_et_seconde.top`.
-4. Reliez l'entrée au démarrage du comportement : NAO est prêt à dialoguer avec les élèves !
+```bash
+python main.py --text-mode
+```
+
+En mode texte, l'application fonctionne sans robot physique et permet de simuler les échanges.
 
 ---
+
+## Exemple de questions que le robot peut traiter
+
+- "Qu'est-ce que le bac de français ?"
+- "Quelle est la méthode de dissertation ?"
+- "Parle-moi de Rimbaud"
+- "Quelles sont les épreuves de français ?"
+- "Qu'est-ce que la seconde prépare ?"
+
+---
+
+## Sources
+
+Les contenus proviennent exclusivement du site [educatee.fr](https://www.educatee.fr), réorganisés pour un usage robotique et pédagogique.
+
+---
+
+## Cas d'usage
+
+Ce projet est adapté pour :
+- un robot éducatif en classe,
+- un assistant oral de soutien scolaire,
+- une démonstration de mémoire de connaissances structurée pour NAO,
+- une base de départ pour un système conversationnel plus avancé.
+
+---
+
+## Remarques
+
+- Ce projet est pensé pour l'environnement NAO/NAOqi.
+- Les contenus ont été nettoyés pour limiter les éléments peu adaptés à la synthèse vocale.
+- La logique d'IA de `main.py` est un complément, mais les réponses locales restent prioritaires pour rester fidèle au programme et au contexte pédagogique.
+
+---
+
+## Licence
+
+Ce dépôt n'indique pas de licence explicite. Vérifiez avant toute utilisation en production ou diffusion publique.
