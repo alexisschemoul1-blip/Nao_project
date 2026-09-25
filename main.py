@@ -172,7 +172,7 @@ class MistralBrain:
     API_URL = "https://api.mistral.ai/v1/chat/completions"
 
     def __init__(self, api_key: Optional[str] = None, model: str = "mistral-small-latest"):
-        self.api_key = api_key or os.environ.get("MISTRAL_API_KEY")
+        self.api_key = api_key or os.environ.get("Mistral_API")
         self.model = model
         if not self.api_key:
             logger.warning(
