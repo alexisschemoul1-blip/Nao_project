@@ -9,9 +9,12 @@ Fonctions :
 3. Mode simulation autonome sur PC si aucun robot NAO physique n'est connecté.
 """
 
+from __future__ import print_function, unicode_literals
+
 import sys
 import os
 import json
+import codecs
 import argparse
 
 # Compatibilité Python 2 et 3 pour la saisie console
@@ -20,14 +23,17 @@ try:
 except NameError:
     pass
 
-# Chemin des ressources locales
+# Chemin des ressources locales.
+# Les fichiers de données (JSON, .top) sont dans le sous-dossier Robot_Files/,
+# là où ce script est déployé sur le robot.
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-KB_JSON_PATH = os.path.join(BASE_DIR, "nao_knowledge_base.json")
-QICHAT_TOP_PATH = os.path.join(BASE_DIR, "dialogue_bac_et_seconde.top")
+ROBOT_FILES_DIR = os.path.join(BASE_DIR, "Robot_Files")
+KB_JSON_PATH = os.path.join(ROBOT_FILES_DIR, "nao_knowledge_base.json")
+QICHAT_TOP_PATH = os.path.join(ROBOT_FILES_DIR, "dialogue_bac_et_seconde.top")
 
 
 def load_local_knowledge():
-    with open(KB_JSON_PATH, "r", encoding="utf-8") as f:
+    with codecs.open(KB_JSON_PATH, "r", "utf-8") as f:
         return json.load(f)
 
 

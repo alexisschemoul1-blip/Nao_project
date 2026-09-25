@@ -1,0 +1,11 @@
+# Environnements virtuels
+.venv-py27/
+.venv-py310/
+
+# Bytecode Python (généré automatiquement, ne pas versionner)
+*.pyc
+*.pyo
+__pycache__/
+
+# Données runtime générées par le programme
+Robot_Files/memoire.json
