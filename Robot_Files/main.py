@@ -57,6 +57,7 @@ except NameError:
 # Compatibilité requêtes HTTP (urllib2 sous Python 2, urllib.request sous Python 3)
 try:
     import urllib2
+    # pyrefly: ignore [missing-import]
     from urllib2 import URLError, HTTPError
 except ImportError:
     import urllib.request as urllib2
@@ -122,7 +123,7 @@ def safe_print(text):
             print(u_text.encode("ascii", "replace"))
 
 
-class SafeArgumentParser(argparse.ArgumentParser):
+class SafeArgumentParser(argparse.ArgumentParser, object):
     """Évite l'échec de ``--help`` sur les consoles Python 2 en ASCII."""
 
     def print_help(self, file=None):
@@ -189,7 +190,7 @@ def get_mistral_api_key():
 # ---------------------------------------------------------------------------
 # 1. Base de connaissances
 # ---------------------------------------------------------------------------
-class KnowledgeBase:
+class KnowledgeBase(object):
     """Charge une base de connaissances locale et retrouve les entrées
     les plus pertinentes par rapport à une question posée.
 
@@ -300,7 +301,7 @@ class KnowledgeBase:
         return dict(self.almemory_keys)
 
 
-class MemoryStore:
+class MemoryStore(object):
     """Stocke et recherche les souvenirs dictés par l'utilisateur.
 
     Cette mémoire est séparée de ``nao_knowledge_base.json`` : elle seule est
@@ -387,7 +388,7 @@ class MemoryStore:
 # ---------------------------------------------------------------------------
 # 2. Cerveau IA (Mistral)
 # ---------------------------------------------------------------------------
-class MistralBrain:
+class MistralBrain(object):
     """Interface avec l'API Mistral, chargée d'harmoniser la réponse finale
     à partir de la question de l'utilisateur et du contexte de connaissances."""
 
@@ -468,8 +469,13 @@ class MistralBrain:
             "max_tokens": 200,
         }
 
-        body = json.dumps(payload, ensure_ascii=False)
+        # json.dumps retourne unicode en Python 3 et str (bytes) en Python 2.
+        # ensure_ascii=True garantit que tous les caractères sont ASCII, donc
+        # l'encodage UTF-8 est sûr dans les deux cas.
+        body = json.dumps(payload, ensure_ascii=True)
         if isinstance(body, unicode_type):
+            body = body.encode("utf-8")
+        elif not isinstance(body, bytes):
             body = body.encode("utf-8")
 
         headers = {
@@ -496,7 +502,7 @@ class MistralBrain:
 # ---------------------------------------------------------------------------
 # 3. Interface robot NAO (avec repli mode texte)
 # ---------------------------------------------------------------------------
-class NaoInterface:
+class NaoInterface(object):
     """Contrôle la synthèse vocale et la reconnaissance vocale du robot NAO.
 
     Si le SDK NAOqi n'est pas disponible ou si la connexion au robot échoue,
@@ -589,7 +595,7 @@ class NaoInterface:
 # ---------------------------------------------------------------------------
 # 4. Orchestrateur
 # ---------------------------------------------------------------------------
-class Assistant:
+class Assistant(object):
     """Boucle principale : écoute une question, interroge la base de
     connaissances, fait harmoniser la réponse par Mistral, puis fait parler
     le robot."""
