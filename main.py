@@ -27,15 +27,16 @@ Variables d'environnement :
 
 Utilisation :
     # Mode texte (sans robot), pour tester la logique de bout en bout :
-    python nao_assistant.py --text-mode --kb knowledge_base.json
+    python main.py --text-mode --kb knowledge_base.json
 
     # Mode robot NAO réel :
-    python nao_assistant.py --robot-ip 192.168.1.42 --robot-port 9559 --kb knowledge_base.json
+    python main.py --robot-ip 192.168.1.42 --robot-port 9559 --kb knowledge_base.json
 """
 
 import os
 import sys
 import json
+import time
 import argparse
 import difflib
 import logging
@@ -93,8 +94,12 @@ class KnowledgeBase:
             logger.warning("Base de connaissances introuvable : %s (base vide utilisée)", self.path)
             return
 
-        with open(self.path, "r", encoding="utf-8") as f:
-            data = json.load(f)
+        try:
+            with open(self.path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except (json.JSONDecodeError, OSError) as exc:
+            logger.error("Impossible de lire la base de connaissances '%s' : %s", self.path, exc)
+            return
 
         self.robot_identity = data.get("robot_identity", {})
         self.almemory_keys = data.get("almemory_keys", {})
@@ -172,7 +177,7 @@ class MistralBrain:
     API_URL = "https://api.mistral.ai/v1/chat/completions"
 
     def __init__(self, api_key: Optional[str] = None, model: str = "mistral-small-latest"):
-        self.api_key = api_key or os.environ.get("Mistral_API")
+        self.api_key = api_key or os.environ.get("MISTRAL_API_KEY") or os.environ.get("Mistral_API")
         self.model = model
         if not self.api_key:
             logger.warning(
@@ -259,6 +264,11 @@ class MistralBrain:
             if context_entries:
                 return context_entries[0].get(fallback_key, "Je n'ai pas de réponse à te donner.")
             return "Désolé, je rencontre un problème pour réfléchir à une réponse."
+        except (KeyError, IndexError, TypeError, ValueError) as exc:
+            logger.error("Réponse Mistral invalide : %s", exc)
+            if context_entries:
+                return context_entries[0].get(fallback_key, "Je n'ai pas de réponse à te donner.")
+            return "Je n'ai pas de réponse exploitable pour le moment."
 
 
 # ---------------------------------------------------------------------------
@@ -278,6 +288,7 @@ class NaoInterface:
         self.tts = None
         self.asr = None
         self.memory = None
+        self.connected = False
 
         if not self.text_mode:
             self._connect_robot()
@@ -297,6 +308,7 @@ class NaoInterface:
             self.tts = ALProxy("ALTextToSpeech", self.ip, self.port)
             self.asr = ALProxy("ALSpeechRecognition", self.ip, self.port)
             self.memory = ALProxy("ALMemory", self.ip, self.port)
+            self.connected = True
             logger.info("Connecté au robot NAO à %s:%s", self.ip, self.port)
         except Exception as exc:  # RuntimeError levée par NAOqi si IP injoignable
             logger.error("Impossible de se connecter au robot (%s). Passage en mode texte.", exc)
@@ -317,11 +329,17 @@ class NaoInterface:
 
     def say(self, text: str) -> None:
         """Fait parler le robot (ou affiche le texte en mode texte)."""
+        if not text:
+            return
         logger.info("Réponse : %s", text)
         if self.text_mode:
             print(f"[NAO dit] {text}")
         else:
-            self.tts.say(text)
+            try:
+                self.tts.say(str(text))
+            except Exception as exc:
+                logger.error("Erreur lors de la synthèse vocale : %s", exc)
+                print(f"[NAO dit] {text}")
 
     def listen(self) -> str:
         """Récupère une question, soit via reconnaissance vocale NAO,
@@ -331,23 +349,38 @@ class NaoInterface:
                 return input("Question (Ctrl+C pour quitter) > ").strip()
             except EOFError:
                 return ""
-        # NOTE : une intégration complète de ALSpeechRecognition nécessite de
-        # configurer un vocabulaire ou d'activer la reconnaissance continue et
-        # de s'abonner à l'événement "WordRecognized" via ALMemory. Cette
-        # méthode simplifiée est un point de départ à adapter à ton cas d'usage
-        # (vocabulaire fermé, dictée libre via un service tiers, etc.).
-        self.asr.setLanguage("French")
-        vocabulary = ["question"]  # à remplacer par un vrai vocabulaire ou une dictée libre
-        self.asr.setVocabulary(vocabulary, False)
-        self.asr.subscribe("nao_assistant")
+
         try:
-            word_data = self.memory.getData("WordRecognized")
+            # Le SDK NAOqi n'est pas fiable avec un vocabulaire libre sur le robot
+            # sans configuration plus poussée. On se contente d'attendre le signal
+            # "WordRecognized" sur ALMemory, ce qui fonctionne dans un usage simple
+            # de dictée ou de mots-clés. Si le robot est entièrement configuré côté
+            # Choregraphe, il est possible d'ajouter un vocabulaire plus ambitieux.
+            self.asr.setLanguage("French")
+            self.asr.subscribe("nao_assistant")
+            start = time.time()
+            while time.time() - start < 15:  # 15 secondes pour parler
+                try:
+                    data = self.memory.getData("WordRecognized")
+                except Exception:
+                    data = None
+                if data:
+                    if isinstance(data, (list, tuple)):
+                        if len(data) >= 2 and isinstance(data[0], str):
+                            self.asr.unsubscribe("nao_assistant")
+                            return str(data[0]).strip()
+                        if len(data) >= 1 and isinstance(data[0], str):
+                            self.asr.unsubscribe("nao_assistant")
+                            return str(data[0]).strip()
+                    elif isinstance(data, str):
+                        self.asr.unsubscribe("nao_assistant")
+                        return data.strip()
+                time.sleep(0.2)
             self.asr.unsubscribe("nao_assistant")
-            if word_data and len(word_data) > 0:
-                return word_data[0]
+            return ""
         except Exception as exc:
             logger.error("Erreur reconnaissance vocale : %s", exc)
-        return ""
+            return ""
 
 
 # ---------------------------------------------------------------------------
@@ -377,13 +410,15 @@ class Assistant:
     def run(self) -> None:
         self.robot.push_knowledge_to_almemory(self.kb.get_almemory_snapshot())
         nom = self.kb.robot_identity.get("nom", "NAO")
+        if not nom:
+            nom = "NAO"
         self.robot.say(f"Bonjour, je suis {nom}, prêt à répondre à tes questions sur le français.")
         try:
             while True:
                 question = self.robot.listen()
                 if not question:
                     continue
-                if question.lower() in ("stop", "quitter", "exit"):
+                if question.lower() in ("stop", "quitter", "exit", "au revoir"):
                     self.robot.say("À bientôt !")
                     break
                 self.handle_question(question)
@@ -402,6 +437,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--kb", type=str, default="knowledge_base.json", help="Chemin vers la base de connaissances JSON")
     parser.add_argument("--mistral-model", type=str, default="mistral-small-latest", help="Modèle Mistral à utiliser")
     parser.add_argument("--mistral-api-key", type=str, default=None, help="Clé API Mistral (sinon variable d'env MISTRAL_API_KEY)")
+    parser.add_argument("--verbose", action="store_true", help="Utiliser les réponses longues de la base de connaissances")
     return parser.parse_args()
 
 
@@ -412,7 +448,7 @@ def main() -> None:
     brain = MistralBrain(api_key=args.mistral_api_key, model=args.mistral_model)
     robot = NaoInterface(ip=args.robot_ip, port=args.robot_port, force_text_mode=args.text_mode)
 
-    assistant = Assistant(robot=robot, kb=kb, brain=brain)
+    assistant = Assistant(robot=robot, kb=kb, brain=brain, verbose=args.verbose)
     assistant.run()
 
 
