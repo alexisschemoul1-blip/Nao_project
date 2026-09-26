@@ -65,6 +65,8 @@
       "triggers": [
         "qui est cécile cathelin",
         "qui a créé educatee",
+        "qui est à l'origine d'educatée",
+        "qui a fondé le site educatee",
         "ta créatrice",
         "ton auteure",
         "parle moi de ta créatrice"
@@ -108,8 +110,10 @@
       "theme": "Lecture plaisir",
       "triggers": [
         "booktrailer",
+        "bande-annonce de livre",
         "vous allez aimer lire",
         "envie de lire",
+        "idées de livres à lire",
         "conseils de lecture",
         "quel livre lire"
       ],
@@ -127,9 +131,11 @@
       "theme": "Organisation",
       "triggers": [
         "agenda des classes",
+        "agenda hebdomadaire des cours",
         "emploi du temps",
         "planning des cours",
-        "créneaux de cours"
+        "créneaux de cours",
+        "organiser ma semaine de cours"
       ],
       "nao_tts_short": "L'agenda des classes permet de visualiser en un coup d'œil les créneaux de cours de la semaine.",
       "nao_tts_long": "La rubrique Agenda des classes d'Educatée permet de visualiser en un coup d'œil les créneaux de cours de chaque semaine et de mieux organiser son travail à venir.",
@@ -142,7 +148,9 @@
         "programme de seconde",
         "cours de seconde",
         "c'est quoi la seconde en français",
-        "l'odyssée du lecteur"
+        "l'odyssée du lecteur",
+        "qu'étudie-t-on en seconde en français",
+        "objectif du cours de français en seconde"
       ],
       "nao_tts_short": "En seconde, le cours de français s'intitule l'Odyssée du lecteur. Il vise à aimer lire et à préparer le lycée en douceur.",
       "nao_tts_long": "En classe de seconde, Educatée propose l'Odyssée du lecteur. C'est un parcours d'apprentissage qui allie rentrée, mythes fondateurs et analyse d'œuvres, comme le tableau Pandora d'Odilon Redon. Le but est d'acquérir de la méthode dès le début du lycée.",
@@ -159,7 +167,9 @@
       "triggers": [
         "pourquoi travailler le bac en seconde",
         "pourquoi s'entraîner dès la seconde",
-        "anticiper le bac en seconde"
+        "anticiper le bac en seconde",
+        "avantages de s'entraîner en seconde",
+        "à quoi sert de préparer le bac dès la seconde"
       ],
       "nao_tts_short": "S'entraîner dès la seconde permet de réduire le stress, d'identifier ses points forts et de progresser grâce à des retours réguliers.",
       "nao_tts_long": "Sur Educatée, Cécile Cathelin explique que s'entraîner dès la seconde apporte trois grands atouts. Premièrement : minimiser le stress des examens futurs. Deuxièmement : obtenir de meilleures performances à l'oral et à l'écrit. Et troisièmement : bénéficier de feedbacks réguliers pour progresser en toute confiance !",
@@ -175,7 +185,10 @@
       "triggers": [
         "grammaire seconde",
         "réviser en seconde",
-        "flashcards seconde"
+        "flashcards seconde",
+        "réviser les figures de style",
+        "réviser les registres littéraires",
+        "points de grammaire de seconde"
       ],
       "nao_tts_short": "Pour la seconde, Educatée propose des flashcards sur les points essentiels de grammaire, ainsi que sur les figures de style et les registres littéraires.",
       "nao_tts_long": "Pour réviser efficacement en seconde, vous disposez de modules interactifs de flashcards. Elles ciblent les points de grammaire nécessaires pour réussir l'entrée au lycée, mais aussi les figures de style et les registres littéraires, indispensables pour commenter les textes.",
@@ -191,7 +204,9 @@
       "triggers": [
         "lectures audio seconde",
         "livres audio seconde",
-        "œuvres audio seconde"
+        "œuvres audio seconde",
+        "écouter des œuvres en seconde",
+        "podcasts de français pour la seconde"
       ],
       "nao_tts_short": "Pour la seconde, vous pouvez écouter Les Regrets de Du Bellay, Andromaque de Racine, et deux œuvres de Zola : J'accuse et Thérèse Raquin.",
       "nao_tts_long": "Dans les ressources audio d'Educatée, les élèves de seconde peuvent écouter plusieurs grandes œuvres : Les Regrets de Joachim Du Bellay en poésie, la tragédie Andromaque de Racine, la lettre ouverte J'accuse et le roman naturaliste Thérèse Raquin d'Émile Zola.",
@@ -209,7 +224,9 @@
         "bac de français",
         "épreuves du bac",
         "comment se passe le bac de français",
-        "le coin des premières"
+        "le coin des premières",
+        "quelles sont les épreuves de français",
+        "durée des épreuves du bac de français"
       ],
       "nao_tts_short": "Le bac de français comporte deux épreuves : un écrit de quatre heures et un oral de vingt minutes précédé de trente minutes de préparation.",
       "nao_tts_long": "Le baccalauréat de français se prépare en classe de première. À l'écrit, vous choisissez entre un commentaire de texte et une dissertation sur œuvre. À l'oral, vous présentez une lecture linéaire avec une question de grammaire, puis vous échangez avec l'examinateur lors d'un entretien.",
@@ -222,7 +239,9 @@
         "méthode du commentaire",
         "comment faire un commentaire",
         "to do list commentaire",
-        "mémento pour écrire"
+        "mémento pour écrire",
+        "plan de commentaire littéraire",
+        "analyser un texte pour le commentaire"
       ],
       "nao_tts_short": "Pour le commentaire, Educatée propose une To Do List complète et un mémento de formules pour lier l'analyse du fond et de la forme.",
       "nao_tts_long": "Pour réussir le commentaire littéraire, Cécile Cathelin a conçu une véritable To Do List. Elle guide l'élève pas à pas : de la lecture attentive du texte à la formulation des axes d'étude, en s'appuyant sur un mémento de formules élégantes pour bien rédiger.",
@@ -239,7 +258,9 @@
         "méthode de la dissertation",
         "comment faire une dissertation",
         "to do list dissertation",
-        "phrases magiques"
+        "phrases magiques",
+        "construire un plan de dissertation",
+        "dissertation sur une œuvre"
       ],
       "nao_tts_short": "Pour la dissertation, suivez la To Do List, la méthode Clapotee et utilisez les phrases magiques pour articuler vos arguments.",
       "nao_tts_long": "La méthode de dissertation sur Educatée repose sur trois piliers : d'abord, la To Do List pour analyser le sujet et construire sa problématique ; ensuite, la méthode Clapotee pour structurer les parties ; et enfin, le répertoire des phrases magiques pour rédiger des transitions impeccables !",
@@ -258,7 +279,9 @@
         "comment réussir l'oral de français",
         "lecture linéaire",
         "entretien de l'oral",
-        "bordereau oral"
+        "bordereau oral",
+        "déroulement de l'oral du bac",
+        "question de grammaire pendant l'oral"
       ],
       "nao_tts_short": "L'oral dure vingt minutes : d'abord la lecture à voix haute, l'explication linéaire et la question de grammaire, puis l'entretien sur votre œuvre choisie.",
       "nao_tts_long": "L'épreuve orale se déroule en deux temps forts. Première partie sur douze points : lecture expressive du texte, explication linéaire méthodique et réponse à la question de grammaire. Deuxième partie sur huit points : entretien argumenté autour d'une œuvre que vous avez choisie et appréciée. Vous pouvez vous auto-évaluer grâce au bordereau officiel 2022 disponible sur Educatée !",
@@ -276,7 +299,8 @@
         "sarraute",
         "nathalie sarraute",
         "pour un oui ou pour un non",
-        "théâtre première"
+        "théâtre première",
+        "les tropismes chez sarraute"
       ],
       "nao_tts_short": "Pour un oui ou pour un non de Nathalie Sarraute explore la puissance cachée des mots dans le dialogue. L'œuvre est associée au Misanthrope de Molière.",
       "nao_tts_long": "Dans la séquence théâtre, Nathalie Sarraute étudie ce qu'elle appelle les tropismes : ces micro-mouvements intérieurs déclenchés par une simple intonation. Educatée propose quatre lectures linéaires, un dossier de citations clés, des sujets de dissertation en PDF et un parcours associé avec Le Misanthrope de Molière.",
@@ -297,7 +321,9 @@
         "la boétie",
         "discours de la servitude volontaire",
         "le contr'un",
-        "littérature d'idées"
+        "littérature d'idées",
+        "pourquoi les peuples obéissent au tyran",
+        "tyrannie consentie"
       ],
       "nao_tts_short": "Le Discours de la servitude volontaire de La Boétie s'interroge sur les raisons qui poussent les peuples à se soumettre à un tyran. L'œuvre est liée à Rousseau.",
       "nao_tts_long": "Pour la littérature d'idées, Étienne de La Boétie dénonce le pouvoir exercé par un seul homme avec le Discours de la servitude volontaire. Educatée met à disposition une carte mentale, une analyse guidée pas à pas, quatre lectures linéaires et une étude comparative avec Jean-Jacques Rousseau.",
@@ -318,7 +344,9 @@
         "rimbaud",
         "arthur rimbaud",
         "cahiers de douai",
-        "poésie première"
+        "poésie première",
+        "révolte dans les cahiers de douai",
+        "poésie de rimbaud"
       ],
       "nao_tts_short": "Les Cahiers de Douai de Rimbaud témoignent de la révolte et de l'émancipation poétique d'un jeune génie de seize ans.",
       "nao_tts_long": "Dans la séquence poésie, les Cahiers de Douai illustrent la fougue rimbaldienne. Sur Educatée, vous découvrirez ses codes poétiques, quatre lectures linéaires, un sujet de dissertation pas à pas demandant si ce recueil représente une révolution poétique, complété par les séries audio de Sylvain Tesson sur France Inter.",
@@ -333,7 +361,9 @@
       "triggers": [
         "chrétien de troyes",
         "roman première",
-        "littérature médiévale"
+        "littérature médiévale",
+        "roman arthurien",
+        "amour courtois chez chrétien de troyes"
       ],
       "nao_tts_short": "Chrétien de Troyes inaugure le genre du roman arthurien en explorant les valeurs chevaleresques, le combat et l'amour courtois.",
       "nao_tts_long": "Dans l'objet d'étude sur le roman et le récit, Chrétien de Troyes met en scène des chevaliers confrontés à leur destinée et à l'amour courtois. Educatée fournit les quatre lectures linéaires requises pour l'oral ainsi que des pistes de dissertation adaptées.",
@@ -348,7 +378,9 @@
         "siècles littéraires",
         "humanisme",
         "classicisme",
-        "lumières"
+        "lumières",
+        "mouvements littéraires français",
+        "contexte historique d'une œuvre"
       ],
       "nao_tts_short": "Sans l'Histoire, on ne peut pas comprendre la Littérature ! Connaître les grands mouvements permet de contextualiser chaque texte au bac.",
       "nao_tts_long": "La devise d'Educatée est claire : sans l'Histoire, on ne peut pas comprendre la Littérature ! Le site propose quinze vidéos pédagogiques retraçant les grands courants : Renaissance, Humanisme, Grand Siècle, Classicisme, Lumières, dix-neuvième et vingtième siècles, avec des jeux interactifs pour s'entraîner.",
@@ -367,7 +399,9 @@
         "intelligence artificielle",
         "utiliser l'ia",
         "chatgpt et français",
-        "compagnons ia"
+        "compagnons ia",
+        "utiliser l'ia pour réviser",
+        "intelligence artificielle et devoirs"
       ],
       "nao_tts_short": "Les intelligences artificielles sont de bons compagnons d'étude à condition de les utiliser avec esprit critique et sans paresse intellectuelle.",
       "nao_tts_long": "Sur la page des compagnons IA d'Educatée, Cécile Cathelin souligne que les IA peuvent grandement aider pour réviser, organiser des idées ou vérifier une syntaxe, mais elles doivent toujours être guidées par votre esprit critique afin de ne jamais remplacer votre propre réflexion.",
