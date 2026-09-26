@@ -14,10 +14,12 @@ import os
 import json
 import argparse
 
-# Chemin des ressources locales
+# Chemins du projet et des ressources destinées au robot
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-KB_JSON_PATH = os.path.join(BASE_DIR, "nao_knowledge_base.json")
-QICHAT_TOP_PATH = os.path.join(BASE_DIR, "dialogue_bac_et_seconde.top")
+PROJECT_DIR = os.path.dirname(BASE_DIR)
+ROBOT_DIR = os.path.join(PROJECT_DIR, "robot")
+KB_JSON_PATH = os.path.join(ROBOT_DIR, "nao_knowledge_base.json")
+QICHAT_TOP_PATH = os.path.join(ROBOT_DIR, "dialogue_bac_et_seconde.top")
 
 
 def load_local_knowledge():

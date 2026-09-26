@@ -3,7 +3,8 @@
 """Assistant conversationnel NAO.
 
 Une demande contenant un mot-clé de la base reçoit immédiatement la réponse
-locale correspondante. Les autres demandes sont envoyées à Mistral.
+locale correspondante. Mistral est une option explicite ; sans clé, tout
+fonctionne localement.
 """
 
 import argparse
@@ -15,8 +16,6 @@ import re
 import time
 import unicodedata
 from typing import Dict, List, Optional
-
-import requests
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("nao_assistant")
@@ -123,15 +122,21 @@ class MistralBrain:
     API_URL = "https://api.mistral.ai/v1/chat/completions"
 
     def __init__(self, api_key: Optional[str] = None, model: str = "mistral-small-latest"):
-        self.api_key = api_key or os.environ.get("MISTRAL_API_KEY") or os.environ.get("Mistral_API")
+        self.api_key = api_key
         self.model = model
         if not self.api_key:
-            logger.warning("Aucune clé MISTRAL_API_KEY : les demandes inconnues ne pourront pas être traitées par Mistral.")
+            logger.warning("Aucune clé Mistral fournie : les demandes inconnues resteront en mode local.")
 
     def answer(self, question: str, context_entries: List[Dict],
                robot_identity: Optional[Dict] = None, verbose: bool = False) -> str:
         if not self.api_key:
             return "Je n'ai pas encore de réponse à cette question."
+
+        try:
+            import requests
+        except ImportError as exc:
+            logger.error("Mistral indisponible sans la dépendance requests : %s", exc)
+            return "Désolé, je ne peux pas répondre pour le moment."
 
         context = "\n".join(
             f"- {entry.get('reponse_longue' if verbose else 'reponse_courte', '')}"
@@ -241,8 +246,8 @@ class Assistant:
             answer = local_entry.get(key) or "Je connais ce sujet."
             logger.info("Réponse locale utilisée : aucun appel Mistral.")
         else:
-            # Aucun mot-clé trouvé : Mistral répond par défaut.
-            logger.info("Aucun mot-clé détecté : appel Mistral.")
+            # Mistral n'est appelé que si une clé a été fournie explicitement.
+            logger.info("Aucun mot-clé détecté : réponse de secours locale ou Mistral optionnel.")
             answer = self.brain.answer(question, self.kb.search(question), self.kb.robot_identity, self.verbose)
 
         self.robot.say(answer)
@@ -265,11 +270,12 @@ class Assistant:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Assistant NAO : réponses locales puis Mistral par défaut")
+    parser = argparse.ArgumentParser(description="Assistant NAO : réponses locales et Mistral optionnel")
     parser.add_argument("--robot-ip", default=None)
     parser.add_argument("--robot-port", type=int, default=9559)
     parser.add_argument("--text-mode", action="store_true")
-    parser.add_argument("--kb", default="knowledge_base.json")
+    default_kb = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nao_knowledge_base.json")
+    parser.add_argument("--kb", default=default_kb)
     parser.add_argument("--mistral-model", default="mistral-small-latest")
     parser.add_argument("--mistral-api-key", default=None)
     parser.add_argument("--verbose", action="store_true")
