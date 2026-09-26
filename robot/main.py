@@ -13,8 +13,10 @@ import json
 import logging
 import os
 import re
+import tempfile
 import time
 import unicodedata
+from datetime import datetime
 from typing import Dict, List, Optional
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
@@ -116,6 +118,60 @@ class KnowledgeBase:
 
     def get_almemory_snapshot(self) -> Dict:
         return dict(self.almemory_keys)
+
+
+class MemoryStore:
+    """Persists user memories separately from the read-only knowledge base."""
+
+    def __init__(self, path: str):
+        self.path = path
+        if not os.path.exists(self.path):
+            self._write({"souvenirs": []})
+        self._read()
+
+    def _read(self) -> Dict:
+        try:
+            with open(self.path, "r", encoding="utf-8") as memory_file:
+                data = json.load(memory_file)
+        except (OSError, json.JSONDecodeError) as exc:
+            logger.error("Impossible de lire la mémoire utilisateur '%s' : %s", self.path, exc)
+            raise
+        if not isinstance(data, dict) or not isinstance(data.get("souvenirs"), list):
+            raise ValueError("Le fichier mémoire doit contenir une liste 'souvenirs'.")
+        return data
+
+    def _write(self, data: Dict) -> None:
+        temporary_path = None
+        try:
+            directory = os.path.dirname(os.path.abspath(self.path))
+            with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", dir=directory, delete=False
+            ) as memory_file:
+                temporary_path = memory_file.name
+                json.dump(data, memory_file, ensure_ascii=False, indent=2)
+                memory_file.write("\n")
+            os.replace(temporary_path, self.path)
+        except OSError as exc:
+            logger.error("Impossible d'écrire la mémoire utilisateur '%s' : %s", self.path, exc)
+            raise
+        finally:
+            if temporary_path and os.path.exists(temporary_path):
+                try:
+                    os.remove(temporary_path)
+                except OSError as exc:
+                    logger.warning("Impossible de supprimer le fichier temporaire '%s' : %s", temporary_path, exc)
+
+    def add(self, text: str) -> bool:
+        content = text.strip()
+        if not content:
+            return False
+        data = self._read()
+        data["souvenirs"].append({
+            "texte": content,
+            "enregistre_le": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        })
+        self._write(data)
+        return True
 
 
 class MistralBrain:
@@ -232,11 +288,42 @@ class NaoInterface:
 
 
 class Assistant:
-    def __init__(self, robot: NaoInterface, kb: KnowledgeBase, brain: MistralBrain, verbose: bool = False):
-        self.robot, self.kb, self.brain, self.verbose = robot, kb, brain, verbose
+    def __init__(self, robot: NaoInterface, kb: KnowledgeBase, brain: MistralBrain,
+                 memory: MemoryStore, verbose: bool = False):
+        self.robot, self.kb, self.brain, self.memory, self.verbose = robot, kb, brain, memory, verbose
+
+    def _remember(self, question: str) -> bool:
+        keyword = "souvenir"
+        normalized = question.strip()
+        if normalized.lower() == keyword:
+            self.robot.say("Dis : Souvenir, suivi de ce que tu veux que je retienne.")
+            return True
+        if not normalized.lower().startswith(keyword):
+            return False
+
+        remainder = normalized[len(keyword):]
+        if remainder and not (remainder[0].isspace() or remainder[0] in ",:;-"):
+            return False
+        content = remainder.lstrip(" \t,.:;-").strip()
+        if not content:
+            self.robot.say("Indique le souvenir après le mot Souvenir.")
+        else:
+            try:
+                saved = self.memory.add(content)
+            except (OSError, ValueError) as exc:
+                logger.error("Impossible d'enregistrer le souvenir : %s", exc)
+                self.robot.say("Je n'ai pas pu enregistrer ce souvenir.")
+            else:
+                if saved:
+                    self.robot.say("C'est noté, je garderai ce souvenir.")
+                else:
+                    self.robot.say("Indique le souvenir après le mot Souvenir.")
+        return True
 
     def handle_question(self, question: str) -> str:
         if not question:
+            return ""
+        if self._remember(question):
             return ""
 
         local_entry = self.kb.find_keyword_match(question)
@@ -278,6 +365,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--kb", default=default_kb)
     parser.add_argument("--mistral-model", default="mistral-small-latest")
     parser.add_argument("--mistral-api-key", default=None)
+    default_memory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memoire.json")
+    parser.add_argument("--memory-file", default=default_memory)
     parser.add_argument("--verbose", action="store_true")
     return parser.parse_args()
 
@@ -285,9 +374,10 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     kb = KnowledgeBase(args.kb)
+    memory = MemoryStore(args.memory_file)
     brain = MistralBrain(args.mistral_api_key, args.mistral_model)
     robot = NaoInterface(args.robot_ip, args.robot_port, args.text_mode)
-    Assistant(robot, kb, brain, args.verbose).run()
+    Assistant(robot, kb, brain, memory, args.verbose).run()
 
 
 if __name__ == "__main__":
