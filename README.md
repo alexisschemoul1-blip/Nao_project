@@ -33,7 +33,8 @@ Nao_project/
 ├── robot/
 │   ├── main.py
 │   ├── dialogue_bac_et_seconde.top
-│   └── nao_knowledge_base.json
+│   ├── nao_knowledge_base.json
+│   └── memoire.json
 └── dev/
     └── nao_memory_loader.py
 ```
@@ -41,6 +42,7 @@ Nao_project/
 ### Fichiers principaux
 
 - `robot/nao_knowledge_base.json` : ressource pédagogique structurée et base de réponses locales ; le chargeur envoie ses clés dans `ALMemory`.
+- `robot/memoire.json` : mémoire utilisateur modifiable, initialement vide et séparée des réponses de base.
 - `robot/dialogue_bac_et_seconde.top` : fichier QiChat chargé dans `ALDialog` sur le robot.
 - `robot/main.py` : assistant autonome exécuté sur NAO ; il utilise les réponses locales et la base placée dans le même dossier, sans clé API ni bibliothèque Python tierce pour ce fonctionnement.
 - `dev/nao_memory_loader.py` : outil lancé depuis l'ordinateur pour charger les ressources sur NAO ou simuler leur usage.
@@ -78,7 +80,7 @@ Cela permet au robot d'accéder rapidement à des informations comme :
 
 ### 1. Assistant Python autonome sur le robot
 
-Copiez le dossier `robot/` sur NAO et lancez `main.py` avec l'adresse locale du robot. Les réponses connues viennent directement de `nao_knowledge_base.json` ; aucune clé API, connexion Internet ni exécution sur un autre ordinateur n'est nécessaire.
+Copiez le dossier `robot/` sur NAO et lancez `main.py` avec l'adresse locale du robot. Les réponses de base viennent de `nao_knowledge_base.json`, qui reste inchangé. Pour enregistrer un souvenir, dites « Souvenir, suivi de ce que tu veux que je retienne » ; le texte est ajouté dans `memoire.json`. Aucune clé API, connexion Internet ni exécution sur un autre ordinateur n'est nécessaire.
 
 ### 2. Dialogue oral
 
