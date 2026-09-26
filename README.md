@@ -30,19 +30,20 @@ Ce projet prépare précisément cette mémoire en réorganisant les contenus p�
 ```text
 Nao_project/
 ├── README.md
-├── main.py
-├── nao_memory_loader.py
-├── nao_knowledge_base.json
-├── dialogue_bac_et_seconde.top
-└── ...
+├── robot/
+│   ├── main.py
+│   ├── dialogue_bac_et_seconde.top
+│   └── nao_knowledge_base.json
+└── dev/
+    └── nao_memory_loader.py
 ```
 
 ### Fichiers principaux
 
-- `nao_knowledge_base.json` : base de connaissances complète, sous forme de clés `ALMemory` et de réponses pédagogiques.
-- `dialogue_bac_et_seconde.top` : script de dialogue en QiChat pour `ALDialog`.
-- `nao_memory_loader.py` : script d'injection de la mémoire sur le robot ou en simulation locale.
-- `main.py` : assistant conversationnel Python qui détecte les mots-clés locaux puis fait appel à Mistral si nécessaire.
+- `robot/nao_knowledge_base.json` : ressource pédagogique structurée et base de réponses locales ; le chargeur envoie ses clés dans `ALMemory`.
+- `robot/dialogue_bac_et_seconde.top` : fichier QiChat chargé dans `ALDialog` sur le robot.
+- `robot/main.py` : assistant autonome exécuté sur NAO ; il utilise les réponses locales et la base placée dans le même dossier, sans clé API ni bibliothèque Python tierce pour ce fonctionnement.
+- `dev/nao_memory_loader.py` : outil lancé depuis l'ordinateur pour charger les ressources sur NAO ou simuler leur usage.
 
 ---
 
@@ -75,58 +76,55 @@ Cela permet au robot d'accéder rapidement à des informations comme :
 
 ## Fonctionnement
 
-### 1. Injection dans la mémoire NAO
+### 1. Assistant Python autonome sur le robot
 
-Le script `nao_memory_loader.py` permet d'envoyer les données dans `ALMemory` et de charger le topic QiChat dans `ALDialog`.
+Copiez le dossier `robot/` sur NAO et lancez `main.py` avec l'adresse locale du robot. Les réponses connues viennent directement de `nao_knowledge_base.json` ; aucune clé API, connexion Internet ni exécution sur un autre ordinateur n'est nécessaire.
 
 ### 2. Dialogue oral
 
-Le fichier `dialogue_bac_et_seconde.top` définit les intentions, concepts et déclencheurs du robot. Il permet de gérer les interactions vocales avec un élève.
+Le fichier `robot/dialogue_bac_et_seconde.top` définit les intentions, concepts et déclencheurs du robot. Il permet de gérer les interactions vocales avec un élève.
 
-### 3. Simulation locale
+### 3. Simulation et outils de développement sur ordinateur
 
-Si aucun robot NAO n'est accessible, le script peut tourner en mode simulation sur ordinateur pour tester les réponses textuelles et la logique de détection de mots-clés.
+Le script facultatif `dev/nao_memory_loader.py` permet depuis un ordinateur d'envoyer les données dans `ALMemory` et de charger le topic QiChat dans `ALDialog`, ou de simuler les ressources localement. Il n'est pas nécessaire pour exécuter `robot/main.py` directement sur NAO.
 
 ---
 
 ## Prérequis
 
-- Python 3
-- Accès à un robot NAO avec NAOqi (optionnel)
-- `naoqi` si vous voulez vous connecter au vrai robot
-- Optionnel : une clé API Mistral pour le mode assistant IA dans `main.py`
+- Python 3 pour exécuter les scripts.
+- Sur NAO : Python 3 et l'environnement NAOqi fourni avec le robot.
+- Pour utiliser le chargeur depuis un ordinateur : accès réseau au robot et module `naoqi` du SDK.
+- Facultatif : passer `--mistral-api-key` et disposer du paquet `requests` pour activer les réponses distantes aux questions inconnues. Sans cette option explicite, l'assistant reste local, même si une clé existe dans l'environnement.
 
 ---
 
 ## Utilisation
 
-### Option 1 : charger la mémoire sur un robot NAO
+### Option 1 : lancer l'assistant directement sur NAO
 
 ```bash
-python nao_memory_loader.py --ip <IP_DU_ROBOT_NAO> --port 9559
+cd robot
+python main.py --robot-ip 127.0.0.1
 ```
 
-Le script :
-- se connecte au robot,
-- injecte les clés dans `ALMemory`,
-- charge le topic QiChat dans `ALDialog`,
-- prononce un message d'accueil.
+Le dossier `robot/` contient le script et sa base de connaissances ; le mode local n'a pas besoin d'un appel à Mistral.
 
-### Option 2 : lancer la simulation locale
+### Option 2 : charger la mémoire depuis un ordinateur
 
 ```bash
-python nao_memory_loader.py --simu
+python dev/nao_memory_loader.py --ip <IP_DU_ROBOT_NAO> --port 9559
 ```
 
-Cette commande lance une simulation console pour tester la logique de réponse locale.
+Le chargeur injecte les clés dans `ALMemory` et charge le topic QiChat dans `ALDialog`.
 
-### Option 3 : utiliser l'assistant Python
+### Option 3 : simulation de développement sur ordinateur
 
 ```bash
-python main.py --text-mode
+python dev/nao_memory_loader.py --simu
 ```
 
-En mode texte, l'application fonctionne sans robot physique et permet de simuler les échanges.
+Cette commande teste les ressources en console sans robot physique.
 
 ---
 
@@ -160,7 +158,7 @@ Ce projet est adapté pour :
 
 - Ce projet est pensé pour l'environnement NAO/NAOqi.
 - Les contenus ont été nettoyés pour limiter les éléments peu adaptés à la synthèse vocale.
-- La logique d'IA de `main.py` est un complément, mais les réponses locales restent prioritaires pour rester fidèle au programme et au contexte pédagogique.
+- `robot/main.py` utilise les réponses locales en priorité. Mistral est une option distincte, activée uniquement si une clé API est fournie.
 
 ---
 
