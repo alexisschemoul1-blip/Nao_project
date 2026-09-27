@@ -101,9 +101,10 @@ class KnowledgeBase:
         logger.info("Mot-clé local détecté : '%s'", keyword)
         return entry
 
-    def search(self, question: str, top_k: int = 3, min_score: float = 0.3) -> List[Dict]:
-        """Recherche de contexte utilisée uniquement pour l'appel Mistral."""
+    def _rank_entries(self, question: str):
         question = self._normalise(question)
+        if not question:
+            return []
         scored = []
         for entry in self.entries:
             candidates = [entry.get("theme", "")] + entry.get("triggers", [])
@@ -114,6 +115,11 @@ class KnowledgeBase:
             )
             scored.append((score, entry))
         scored.sort(key=lambda item: item[0], reverse=True)
+        return scored
+
+    def search(self, question: str, top_k: int = 3, min_score: float = 0.3) -> List[Dict]:
+        """Recherche de contexte utilisée uniquement pour l'appel Mistral."""
+        scored = self._rank_entries(question)
         return [entry for score, entry in scored if score >= min_score][:top_k]
 
     def get_almemory_snapshot(self) -> Dict:
@@ -176,6 +182,7 @@ class MemoryStore:
 
 class MistralBrain:
     API_URL = "https://api.mistral.ai/v1/chat/completions"
+    MAX_QUESTION_LENGTH = 200
 
     def __init__(self, api_key: Optional[str] = None, model: str = "mistral-small-latest"):
         self.api_key = api_key
@@ -199,9 +206,11 @@ class MistralBrain:
             for entry in context_entries
         )
         system = (
-            "Tu es le cerveau conversationnel d'un robot NAO. Réponds en français, "
-            "avec une réponse courte, claire et adaptée à l'oral. "
-            "Si un contexte est fourni, utilise-le sans inventer de faits."
+            "Tu es NAO, l'assistant de Mme Cathelin. Tu aides les élèves à préparer "
+            "le baccalauréat de français. Réponds en français avec des explications "
+            "courtes, claires et adaptées à l'oral. Si un contexte est fourni, "
+            "utilise-le sans inventer de faits ; si tu ne connais pas une information, "
+            "dis-le clairement."
         )
         payload = {
             "model": self.model,
@@ -328,10 +337,16 @@ class Assistant:
 
         local_entry = self.kb.find_keyword_match(question)
         if local_entry is not None:
-            # Mot-clé trouvé : réponse basique immédiate, sans appel à l'IA.
+            # Un déclencheur exact permet de répondre sans appel distant.
             key = "reponse_longue" if self.verbose else "reponse_courte"
             answer = local_entry.get(key) or "Je connais ce sujet."
             logger.info("Réponse locale utilisée : aucun appel Mistral.")
+        elif len(question) > self.brain.MAX_QUESTION_LENGTH:
+            answer = "Ta question est trop longue. Peux-tu la reformuler plus brièvement ?"
+            logger.info(
+                "Question trop longue (%d caractères) : aucun appel Mistral.",
+                len(question),
+            )
         else:
             # Mistral n'est appelé que si une clé a été fournie explicitement.
             logger.info("Aucun mot-clé détecté : réponse de secours locale ou Mistral optionnel.")

@@ -97,7 +97,7 @@ Le script facultatif `dev/nao_memory_loader.py` permet depuis un ordinateur d'en
 - Python 3 pour exécuter les scripts.
 - Sur NAO : Python 3 et l'environnement NAOqi fourni avec le robot.
 - Pour utiliser le chargeur depuis un ordinateur : accès réseau au robot et module `naoqi` du SDK.
-- Facultatif : passer `--mistral-api-key` et disposer du paquet `requests` pour activer les réponses distantes aux questions inconnues. Sans cette option explicite, l'assistant reste local, même si une clé existe dans l'environnement.
+- Facultatif : passer `--mistral-api-key` et disposer du paquet `requests` pour activer les réponses distantes aux questions inconnues de 200 caractères maximum. Les déclencheurs présents dans la base locale restent prioritaires ; si aucun ne correspond, Mistral est appelé pour une question courte. Les questions plus longues sont renvoyées à reformuler sans appel Mistral. Sans cette option explicite, l'assistant reste local, même si une clé existe dans l'environnement.
 
 ---
 
