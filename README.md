@@ -11,13 +11,16 @@ Le mode de réponse par base de connaissances fonctionne directement sur le robo
 `robot/main.py` est l'assistant autonome :
 
 1. Il charge `nao_knowledge_base.json` en UTF-8, qui contient l'identité du robot, les réponses pédagogiques et les clés à publier dans `ALMemory`.
-2. Il ouvre `memoire.json`, fichier séparé dans lequel les souvenirs dictés par l'utilisateur sont enregistrés.
+2. Il ouvre `memoire.json`, fichier séparé dans lequel les souvenirs dictés par l'utilisateur sont enregistrés et conservés entre les redémarrages.
 3. Si une adresse de robot est fournie, il se connecte aux services NAOqi : reconnaissance vocale, synthèse vocale et mémoire du robot. La hauteur TTS est réglée à `0.8` pour rendre la voix plus grave.
-4. Il écoute une question et cherche d'abord un déclencheur explicite dans la base de connaissances. Si une réponse locale correspond, elle est prononcée sans appel à l'IA.
-5. Si aucune réponse locale ne correspond, une question de 200 caractères maximum est envoyée à Mistral uniquement si une clé API a été fournie. Les questions plus longues sont renvoyées à reformuler. Sans clé, aucune requête Mistral n'est faite.
-6. Une demande commençant par « Souvenir » ajoute le texte qui suit dans `memoire.json`.
+4. Il écoute une question et cherche d'abord un déclencheur explicite dans la base de connaissances. Si une réponse correspond, elle est prononcée sans appel à l'IA ; les souvenirs pertinents peuvent compléter cette réponse.
+5. Si la base ne répond pas, il recherche les souvenirs pertinents dans `memoire.json`. Sans clé Mistral, le robot restitue les informations mémorisées directement et localement. Avec Mistral, les souvenirs pertinents sont transmis comme contexte pour aider à répondre.
+6. Une demande commençant par « Souvenir » ajoute le texte qui suit dans `memoire.json`. Les informations ainsi apprises sont disponibles aux questions suivantes.
+7. Si aucune réponse locale ou mémoire pertinente n'est trouvée, une question de 200 caractères maximum peut être envoyée à Mistral. Les questions plus longues sont renvoyées à reformuler.
 
-**Limite actuelle de la mémoire :** les souvenirs sont enregistrés sur disque, mais `main.py` ne les recherche pas et ne les transmet pas encore à Mistral pour répondre aux questions. La mémoire persistante est donc une fonction de prise de notes, pas encore une mémoire conversationnelle consultable.
+La recherche de souvenirs repose sur les mots significatifs présents à la fois dans la question et dans les souvenirs. Il s'agit d'une recherche textuelle locale, pas d'une compréhension sémantique ; une question formulée très différemment peut ne pas retrouver le souvenir attendu.
+
+Exemple : dites « Souvenir, mon prénom est Alice », puis demandez « Quel est mon prénom ? ». Sans Mistral, NAO retrouve et restitue localement le souvenir. Avec Mistral configuré, ce souvenir est fourni au modèle comme contexte pour formuler la réponse.
 
 ## Fichiers du projet
 
@@ -37,7 +40,7 @@ Nao_project/
 
 - **`robot/main.py`** : boucle de conversation autonome, recherche locale des réponses, enregistrement des souvenirs et appels Mistral facultatifs.
 - **`robot/nao_knowledge_base.json`** : base structurée des contenus Educatée et des réponses courtes ou longues. Le programme la lit sans modifier ce fichier.
-- **`robot/memoire.json`** : données personnelles ajoutées avec la commande vocale « Souvenir, ... ». Ce fichier est distinct de la base pédagogique.
+- **`robot/memoire.json`** : données personnelles ajoutées avec la commande vocale « Souvenir, ... ». Ce fichier est distinct de la base pédagogique et est consulté pour retrouver des souvenirs correspondant aux questions.
 - **`robot/educatee_francais_lycee.top`** : topic QiChat contenant des concepts, des phrases déclencheuses et des dialogues prêts pour `ALDialog`. Il est chargé par l'outil de développement ; `main.py` utilise sa propre recherche dans le JSON et ne charge pas directement le topic.
 - **`dev/nao_memory_loader.py`** : outil facultatif lancé depuis un ordinateur pour injecter les clés de connaissances dans `ALMemory`, configurer la voix et charger le topic QiChat dans `ALDialog`. Il fournit également une simulation en console. Cet ordinateur sert à préparer ou tester le robot, pas à exécuter l'assistant autonome une fois celui-ci installé sur un environnement compatible du robot.
 - **`tests/test_main.py`** : tests de la sélection des réponses locales, des appels Mistral, de l'enregistrement des souvenirs, des réglages TTS et du chemin du topic.
@@ -68,14 +71,17 @@ Les réponses du JSON et l'enregistrement de souvenirs restent locaux. Aucune d�
 
 ## Activer Mistral (facultatif)
 
-Mistral n'est pas exécuté localement sur le NAO. **Cette option nécessite une connexion Internet**, une clé API et le paquet `requests`. Avec Python 2.7, installez une version de `requests` qui prend encore en charge Python 2 (par exemple `requests<2.28`). L'appel est réservé aux questions courtes qui ne correspondent pas à un déclencheur de la base locale. Les réponses locales, la reconnaissance vocale et la synthèse vocale du robot restent sur le NAO.
+Mistral n'est pas exécuté localement sur le NAO. **Son accès nécessite une connexion Internet**, une clé API et le paquet `requests`. La clé est lue par défaut depuis la variable d'environnement Linux `MISTRAL_API_KEY`. Avec Python 2.7, installez une version de `requests` qui prend encore en charge Python 2 (par exemple `requests<2.28`). L'appel est réservé aux questions courtes qui ne correspondent pas à un déclencheur de la base locale ; les souvenirs pertinents sont ajoutés au contexte envoyé à Mistral. Les réponses de la base et de la mémoire, la reconnaissance vocale et la synthèse vocale restent sur le NAO.
 
 ```bash
 cd robot
-python main.py --text-mode --mistral-api-key VOTRE_CLE_API
+export MISTRAL_API_KEY="VOTRE_CLE_API"
+python main.py --robot-ip 127.0.0.1
 ```
 
-Sans clé API ou sans connexion Internet, aucune réponse Mistral ne peut être obtenue ; sans clé, le programme reste en mode local et indique qu'il n'a pas de réponse pour les questions inconnues. Ne placez pas une vraie clé dans un fichier suivi par Git.
+La variable exportée est disponible pour le processus lancé depuis ce shell. Pour un démarrage automatique sur Linux/NAO, configurez `MISTRAL_API_KEY` dans l'environnement du service ou du script de lancement, puis redémarrez-le. `--mistral-api-key` reste disponible pour fournir explicitement une clé ; cette option prend alors priorité sur la variable d'environnement.
+
+Sans clé API, le programme ne fait aucun appel Internet et peut toujours répondre avec la base et les souvenirs locaux. Si Mistral est configuré mais que le robot n'a pas Internet, aucune réponse de Mistral ne peut être obtenue. Ne placez pas une vraie clé dans un fichier suivi par Git. Lorsque Mistral est activé, les questions ainsi que les extraits de souvenirs pertinents sont transmis au service distant.
 
 ## Charger les ressources NAO depuis un ordinateur
 
@@ -101,9 +107,9 @@ python3 -m unittest discover -s tests -v
 
 ## Limites et évolutions possibles
 
-- Le fonctionnement embarqué sans service externe concerne les réponses prévues dans la base et l'enregistrement local des souvenirs. Répondre à une question inconnue avec Mistral implique un échange avec un service distant.
+- La base de connaissances et la mémoire utilisateur sont conservées localement. Les souvenirs pertinents ne quittent le robot que si un appel Mistral est activé pour répondre à une question.
 - `dev/nao_memory_loader.py` et les tests utilisent Python 3 ; le portage Python 2.7 concerne le programme autonome `robot/main.py`.
-- Pour que la mémoire devienne conversationnelle, il reste à rechercher les souvenirs enregistrés et à définir explicitement comment ils peuvent enrichir les réponses.
+- La recherche des souvenirs est lexicale et peut manquer les paraphrases ; une recherche sémantique reste une évolution possible.
 - Les sources pédagogiques sont structurées à partir des ressources Educatée et CLAPOTEE ; la base JSON reste modifiable indépendamment du code.
 
 ## Licence
