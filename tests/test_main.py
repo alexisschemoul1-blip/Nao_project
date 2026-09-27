@@ -7,7 +7,7 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
-from robot.main import Assistant, KnowledgeBase, MemoryStore, MistralBrain, NaoInterface
+from robot.main import Assistant, KnowledgeBase, MemoryStore, MistralBrain, NaoInterface, parse_args
 
 
 class FakeRobot:
@@ -23,10 +23,28 @@ class FakeBrain:
 
     def __init__(self):
         self.calls = []
+        self.api_key = None
+        self.memory_contexts = []
 
-    def answer(self, question, context_entries, robot_identity, verbose):
+    def answer(self, question, context_entries, robot_identity, verbose, memory_entries=None):
         self.calls.append(question)
+        self.memory_contexts.append(memory_entries or [])
         return "Réponse Mistral"
+
+
+class FakeMemory(MemoryStore):
+    def __init__(self):
+        self.items = []
+
+    def add(self, text):
+        self.items.append({"texte": text})
+        return True
+
+    def search(self, question):
+        return MemoryStore.search(self, question)
+
+    def _read(self):
+        return {"souvenirs": self.items}
 
 
 class AssistantQuestionTests(unittest.TestCase):
@@ -46,7 +64,8 @@ class AssistantQuestionTests(unittest.TestCase):
         self.kb = KnowledgeBase(self.kb_file.name)
         self.robot = FakeRobot()
         self.brain = FakeBrain()
-        self.assistant = Assistant(self.robot, self.kb, self.brain, memory=None)
+        self.memory = FakeMemory()
+        self.assistant = Assistant(self.robot, self.kb, self.brain, self.memory)
 
     def _remove_kb_file(self):
         os.unlink(self.kb_file.name)
@@ -81,6 +100,30 @@ class AssistantQuestionTests(unittest.TestCase):
         self.assertEqual(answer, "Réponse Mistral")
         self.assertEqual(self.brain.calls, ["question inconnue"])
 
+    def test_saved_memory_answers_locally_without_mistral(self):
+        self.assistant.handle_question("Souvenir, Mon prénom est Alice")
+
+        answer = self.assistant.handle_question("Quel est mon prénom ?")
+
+        self.assertIn("Alice", answer)
+        self.assertEqual(self.brain.calls, [])
+
+    def test_relevant_memory_is_passed_to_mistral(self):
+        self.assistant.handle_question("Souvenir, Mon prénom est Alice")
+        self.brain.api_key = "test-api-key"
+
+        answer = self.assistant.handle_question("Quel est mon prénom ?")
+
+        self.assertEqual(answer, "Réponse Mistral")
+        self.assertEqual(self.brain.memory_contexts[-1][0]["texte"], "Mon prénom est Alice")
+
+    def test_environment_variable_provides_mistral_key(self):
+        with patch.dict(os.environ, {"MISTRAL_API_KEY": "environment-key"}):
+            with patch.object(sys, "argv", ["main.py"]):
+                args = parse_args()
+
+        self.assertEqual(args.mistral_api_key, "environment-key")
+
 
 class NaoInterfaceTests(unittest.TestCase):
     def test_robot_connection_sets_lower_tts_pitch(self):
@@ -106,6 +149,20 @@ class MemoryStoreTests(unittest.TestCase):
         saved = memory._read()["souvenirs"][0]["texte"]
 
         self.assertEqual(saved, "Révision du français avec NAO")
+        self.assertEqual(
+            memory.search("Comment réviser le français ?")[0]["texte"],
+            "Révision du français avec NAO",
+        )
+        self.assertEqual(memory.search("Quel est le prénom de mon chat ?"), [])
+
+    def test_memory_search_matches_prenom_and_appelle_wording(self):
+        memory = MemoryStore.__new__(MemoryStore)
+        memory.path = "unused"
+        memory._read = lambda: {"souvenirs": [{"texte": "Je m'appelle Alice"}]}
+
+        matches = memory.search("Quel est mon prénom ?")
+
+        self.assertEqual(matches[0]["texte"], "Je m'appelle Alice")
 
 
 class MistralBrainTests(unittest.TestCase):
@@ -118,12 +175,17 @@ class MistralBrainTests(unittest.TestCase):
         brain = MistralBrain("test-api-key")
 
         with patch.dict(sys.modules, {"requests": requests}):
-            answer = brain.answer("Comment réviser ?", [])
+            answer = brain.answer(
+                "Comment réviser ?",
+                [],
+                memory_entries=[{"texte": "L'élève révise avec Alice"}],
+            )
 
         self.assertEqual(answer, "Réponse utile")
         request = requests.post.call_args
         self.assertEqual(request[1]["headers"]["Authorization"], "Bearer test-api-key")
         self.assertIn("assistant de Mme Cathelin", request[1]["json"]["messages"][0]["content"])
+        self.assertIn("L'élève révise avec Alice", request[1]["json"]["messages"][1]["content"])
 
 
 class BacKnowledgeTests(unittest.TestCase):

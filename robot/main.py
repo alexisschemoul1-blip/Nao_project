@@ -154,6 +154,22 @@ class KnowledgeBase:
 class MemoryStore:
     """Persists user memories separately from the read-only knowledge base."""
 
+    STOP_WORDS = set((
+        "alors", "avec", "avoir", "cette", "comment", "dans", "depuis", "des", "donc",
+        "elle", "elles", "est", "et", "eux", "faire", "fait", "ici", "ils",
+        "je", "la", "le", "les", "leur", "lui", "ma", "mais", "me", "mes",
+        "moi", "mon", "ne", "nos", "notre", "nous", "on", "ou", "par", "pas",
+        "pour", "que", "quel", "quelle", "quels", "quelles", "qui", "sa", "se",
+        "ses", "son", "sur", "ta", "te", "tes", "toi", "ton", "tu", "un", "une",
+        "vos", "votre", "vous", "y",
+    ))
+    TERM_ALIASES = {
+        "prenom": "identite",
+        "appelle": "identite",
+        "appelles": "identite",
+        "surnom": "identite",
+    }
+
     def __init__(self, path):
         self.path = path
         if not os.path.exists(self.path):
@@ -204,6 +220,33 @@ class MemoryStore:
         self._write(data)
         return True
 
+    def search(self, question, top_k=3, min_score=0.34):
+        """Finds saved memories sharing meaningful words with the question."""
+        question_words = self._search_terms(question)
+        if not question_words:
+            return []
+
+        ranked = []
+        for index, item in enumerate(self._read()["souvenirs"]):
+            if not isinstance(item, dict) or not item.get("texte"):
+                continue
+            memory_words = self._search_terms(item["texte"])
+            overlap = question_words.intersection(memory_words)
+            score = float(len(overlap)) / len(question_words)
+            if overlap and score >= min_score:
+                ranked.append((score, index, item))
+
+        ranked.sort(key=lambda match: (match[0], match[1]), reverse=True)
+        return [item for score, index, item in ranked[:top_k]]
+
+    def _search_terms(self, text):
+        words = re.findall(r"[a-z0-9]+", KnowledgeBase._normalise(text))
+        return set(
+            self.TERM_ALIASES.get(word, word)
+            for word in words
+            if len(word) > 2 and word not in self.STOP_WORDS
+        )
+
 
 class MistralBrain:
     API_URL = "https://api.mistral.ai/v1/chat/completions"
@@ -215,7 +258,8 @@ class MistralBrain:
         if not self.api_key:
             logger.warning("Aucune clé Mistral fournie : les demandes inconnues resteront en mode local.")
 
-    def answer(self, question, context_entries, robot_identity=None, verbose=False):
+    def answer(self, question, context_entries, robot_identity=None, verbose=False,
+               memory_entries=None):
         if not self.api_key:
             return "Je n'ai pas encore de réponse à cette question."
 
@@ -225,10 +269,22 @@ class MistralBrain:
             logger.error("Mistral indisponible sans la dépendance requests : %s", exc)
             return "Désolé, je ne peux pas répondre pour le moment."
 
-        context = u"\n".join(
+        context_sections = []
+        knowledge_context = u"\n".join(
             u"- {0}".format(entry.get("reponse_longue" if verbose else "reponse_courte", ""))
             for entry in context_entries
         )
+        if knowledge_context:
+            context_sections.append(u"Base pédagogique locale :\n{0}".format(knowledge_context))
+        if memory_entries:
+            memories = u"\n".join(
+                u"- {0}".format(to_text(entry.get("texte", "")))
+                for entry in memory_entries
+            )
+            context_sections.append(
+                u"Souvenirs personnels enregistrés pour cet utilisateur :\n{0}".format(memories)
+            )
+        context = u"\n".join(context_sections)
         system = (
             "Tu es NAO, l'assistant de Mme Cathelin. Tu aides les élèves à préparer "
             "le baccalauréat de français. Réponds en français avec des explications "
@@ -370,22 +426,43 @@ class Assistant:
         if self._remember(question):
             return ""
 
+        memories = self.memory.search(question)
         local_entry = self.kb.find_keyword_match(question)
         if local_entry is not None:
             # Un déclencheur exact permet de répondre sans appel distant.
             key = "reponse_longue" if self.verbose else "reponse_courte"
             answer = local_entry.get(key) or "Je connais ce sujet."
+            if memories:
+                remembered_text = u" ; ".join(
+                    to_text(entry.get("texte", "")) for entry in memories
+                )
+                answer = u"{0} Je me souviens aussi que {1}".format(answer, remembered_text)
             logger.info("Réponse locale utilisée : aucun appel Mistral.")
-        elif len(question) > self.brain.MAX_QUESTION_LENGTH:
-            answer = "Ta question est trop longue. Peux-tu la reformuler plus brièvement ?"
-            logger.info(
-                "Question trop longue (%d caractères) : aucun appel Mistral.",
-                len(question),
-            )
         else:
-            # Mistral n'est appelé que si une clé a été fournie explicitement.
-            logger.info("Aucun mot-clé détecté : réponse de secours locale ou Mistral optionnel.")
-            answer = self.brain.answer(question, self.kb.search(question), self.kb.robot_identity, self.verbose)
+            has_mistral_key = bool(getattr(self.brain, "api_key", None))
+            if memories and (
+                not has_mistral_key or len(question) > self.brain.MAX_QUESTION_LENGTH
+            ):
+                remembered_text = u" ; ".join(
+                    to_text(entry.get("texte", "")) for entry in memories
+                )
+                answer = u"Je me souviens que {0}".format(remembered_text)
+                logger.info("Réponse issue de la mémoire utilisateur : aucun appel Mistral.")
+            elif len(question) > self.brain.MAX_QUESTION_LENGTH:
+                answer = "Ta question est trop longue. Peux-tu la reformuler plus brièvement ?"
+                logger.info(
+                    "Question trop longue (%d caractères) : aucun appel Mistral.",
+                    len(question),
+                )
+            else:
+                logger.info("Aucun mot-clé détecté : réponse Mistral ou de secours locale.")
+                answer = self.brain.answer(
+                    question,
+                    self.kb.search(question),
+                    self.kb.robot_identity,
+                    self.verbose,
+                    memory_entries=memories,
+                )
 
         self.robot.say(answer)
         return answer
@@ -416,7 +493,11 @@ def parse_args():
     default_kb = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nao_knowledge_base.json")
     parser.add_argument("--kb", default=default_kb)
     parser.add_argument("--mistral-model", default="mistral-small-latest")
-    parser.add_argument("--mistral-api-key", default=None)
+    parser.add_argument(
+        "--mistral-api-key",
+        default=os.environ.get("MISTRAL_API_KEY"),
+        help="Clé API Mistral (par défaut : variable d'environnement MISTRAL_API_KEY)",
+    )
     default_memory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memoire.json")
     parser.add_argument("--memory-file", default=default_memory)
     parser.add_argument("--verbose", action="store_true")
