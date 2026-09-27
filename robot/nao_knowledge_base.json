@@ -2,13 +2,155 @@
   "robot_identity": {
     "nom": "NAO",
     "role": "Tuteur pédagogique de français pour le lycée (Seconde et Première / Bac)",
-    "source_exclusive": "Site EDUCATEE (educatee.fr) par Cécile Cathelin",
+    "source_exclusive": "Site EDUCATEE (educatee.fr) et chaîne YouTube CLAPOTEE par Cécile Cathelin",
     "langue": "fr-FR",
     "synthèse_vocale_recommandee": "Acapela / Nuance French (ALTextToSpeech / ALAnimatedSpeech)",
     "consigne_vocale": "Les réponses sont calibrées pour la voix de NAO : phrases fluides, claires, sans URLs barbares, avec ponctuation adaptée à la diction du robot."
   },
+  "youtube_video_sources": [
+    {
+      "video_id": "ISY3ZL7987M",
+      "title": "Zola, Pot Bouille",
+      "published_at": "2026-07-31",
+      "source_url": "https://www.youtube.com/watch?v=ISY3ZL7987M",
+      "description_summary": "Booktrailer réalisé pour les Éditions Belin afin de donner envie de découvrir des œuvres littéraires."
+    },
+    {
+      "video_id": "s-5gH_zSXHo",
+      "title": "Chrétien de Troyes, Le Chevalier de la charrette",
+      "published_at": "2026-07-31",
+      "source_url": "https://www.youtube.com/watch?v=s-5gH_zSXHo",
+      "description_summary": "Booktrailer réalisé pour les Éditions Belin afin de donner envie de découvrir des œuvres littéraires."
+    },
+    {
+      "video_id": "HrStcz4BYDo",
+      "title": "Les faits divers en littérature.",
+      "published_at": "2026-07-31",
+      "source_url": "https://www.youtube.com/watch?v=HrStcz4BYDo",
+      "description_summary": "Le titre annonce le thème des faits divers en littérature ; la description disponible ne précise pas le contenu de l'analyse."
+    },
+    {
+      "video_id": "jzbNPKBENk4",
+      "title": "Zola, Thérèse Raquin",
+      "published_at": "2026-07-31",
+      "source_url": "https://www.youtube.com/watch?v=jzbNPKBENk4",
+      "description_summary": "Booktrailer réalisé pour les Éditions Belin afin de donner envie de découvrir des œuvres littéraires."
+    },
+    {
+      "video_id": "PIrrvNeeXrQ",
+      "title": "Racine, Britannicus",
+      "published_at": "2026-07-31",
+      "source_url": "https://www.youtube.com/watch?v=PIrrvNeeXrQ",
+      "description_summary": "Booktrailer réalisé pour les Éditions Belin afin de donner envie de découvrir des œuvres littéraires."
+    },
+    {
+      "video_id": "n1NP5O2c7To",
+      "title": "Tolstoï, Anna Karénine",
+      "published_at": "2026-07-31",
+      "source_url": "https://www.youtube.com/watch?v=n1NP5O2c7To",
+      "description_summary": "Booktrailer réalisé pour les Éditions Belin afin de donner envie de découvrir des œuvres littéraires."
+    },
+    {
+      "video_id": "CLteDB-1qGc",
+      "title": "Hugo, Le dernier jour d'un condamné",
+      "published_at": "2026-07-31",
+      "source_url": "https://www.youtube.com/watch?v=CLteDB-1qGc",
+      "description_summary": "Booktrailer réalisé pour les Éditions Belin afin de donner envie de découvrir des œuvres littéraires."
+    },
+    {
+      "video_id": "PclTCZvgmOg",
+      "title": "Anthologie 30 poèmes baroques",
+      "published_at": "2026-07-31",
+      "source_url": "https://www.youtube.com/watch?v=PclTCZvgmOg",
+      "description_summary": "Booktrailer réalisé pour les Éditions Belin afin de donner envie de découvrir des œuvres littéraires."
+    },
+    {
+      "video_id": "0hlXdWn8y6Q",
+      "title": "Apollinaire, « Zone », parcours associé Rimbaud",
+      "published_at": "2026-05-17",
+      "source_url": "https://www.youtube.com/watch?v=0hlXdWn8y6Q",
+      "description_summary": "Le titre présente « Zone » d'Apollinaire comme parcours associé à Rimbaud."
+    },
+    {
+      "video_id": "zXplHfw20tk",
+      "title": "Rimbaud, Les Cahiers de Douai, « Ma Bohème »",
+      "published_at": "2026-05-17",
+      "source_url": "https://www.youtube.com/watch?v=zXplHfw20tk",
+      "description_summary": "La description de la lecture linéaire met en avant la satire de Charleville et l'émancipation créatrice de Rimbaud."
+    },
+    {
+      "video_id": "tPJSHd_vDLo",
+      "title": "Rimbaud, Les Cahiers de Douai, « Le Mal »",
+      "published_at": "2026-05-09",
+      "source_url": "https://www.youtube.com/watch?v=tPJSHd_vDLo",
+      "description_summary": "La description de la lecture linéaire met en avant la satire de Charleville et l'émancipation créatrice de Rimbaud."
+    },
+    {
+      "video_id": "8C45T1mbCFE",
+      "title": "Rimbaud, Les Cahiers de Douai, « À la musique »",
+      "published_at": "2026-04-29",
+      "source_url": "https://www.youtube.com/watch?v=8C45T1mbCFE",
+      "description_summary": "La description de la lecture linéaire met en avant la satire de Charleville et l'émancipation créatrice de Rimbaud."
+    },
+    {
+      "video_id": "G2DgYkWTxUc",
+      "title": "Lecture linéaire de La Boétie : « C'est certainement que le tyran... aimé... je n'en vois pas une. »",
+      "published_at": "2026-03-08",
+      "source_url": "https://www.youtube.com/watch?v=G2DgYkWTxUc",
+      "description_summary": "La lecture linéaire est présentée comme une étude des origines de la servitude volontaire selon La Boétie."
+    },
+    {
+      "video_id": "ae-8FINb294",
+      "title": "Étienne de La Boétie - La stratégie argumentative du discours",
+      "published_at": "2026-03-01",
+      "source_url": "https://www.youtube.com/watch?v=ae-8FINb294",
+      "description_summary": "La description met en avant la progression argumentative, les questions rhétoriques, l'ironie et les exemples, ainsi que les ressorts de conviction et de persuasion."
+    },
+    {
+      "video_id": "FSXqJIdHV9M",
+      "title": "Étienne de La Boétie - L'image du tyran",
+      "published_at": "2026-02-28",
+      "source_url": "https://www.youtube.com/watch?v=FSXqJIdHV9M",
+      "description_summary": "La description relie le pouvoir du tyran au consentement du peuple, aux habitudes, aux peurs et aux illusions."
+    },
+    {
+      "video_id": "J5GSf5Q4mwA",
+      "title": "Étienne de La Boétie - Le titre",
+      "published_at": "2026-02-25",
+      "source_url": "https://www.youtube.com/watch?v=J5GSf5Q4mwA",
+      "description_summary": "La description présente « servitude volontaire » comme un paradoxe et un oxymore qui interroge la liberté."
+    },
+    {
+      "video_id": "AiTPW5HAgGI",
+      "title": "Étienne de La Boétie - Le parcours associé",
+      "published_at": "2026-02-23",
+      "source_url": "https://www.youtube.com/watch?v=AiTPW5HAgGI",
+      "description_summary": "Le parcours associé est intitulé « Défendre et entretenir la liberté » ; la description cite la vigilance, l'éducation et le savoir comme pistes de réflexion."
+    },
+    {
+      "video_id": "ullyCTwzGIo",
+      "title": "Lecture linéaire de La Boétie : « Il y a trois sortes de tyrans... leurs naturels esclaves. »",
+      "published_at": "2026-02-22",
+      "source_url": "https://www.youtube.com/watch?v=ullyCTwzGIo",
+      "description_summary": "La lecture linéaire est présentée comme une étude des origines de la servitude volontaire selon La Boétie."
+    },
+    {
+      "video_id": "s5uPhiH01D0",
+      "title": "Lecture linéaire de La Boétie : « Pauvres et misérables peuples »",
+      "published_at": "2026-02-16",
+      "source_url": "https://www.youtube.com/watch?v=s5uPhiH01D0",
+      "description_summary": "La lecture linéaire est présentée comme une étude des origines de la servitude volontaire selon La Boétie."
+    },
+    {
+      "video_id": "eNO6L-76uF0",
+      "title": "La Boétie, Le Discours de la servitude volontaire",
+      "published_at": "2026-02-01",
+      "source_url": "https://www.youtube.com/watch?v=eNO6L-76uF0",
+      "description_summary": "Booktrailer réalisé pour les Éditions Belin afin de donner envie de découvrir des œuvres littéraires."
+    }
+  ],
   "almemory_keys": {
-    "Educatee/Meta/Source": "educatee.fr par Cécile Cathelin",
+    "Educatee/Meta/Source": "Site educatee.fr et chaîne YouTube CLAPOTEE par Cécile Cathelin",
     "Educatee/Meta/Ouvrage": "Vous allez aimer réussir votre bac de français (Éditions Ellipses)",
     "Educatee/Meta/Podcasts": "Plateforme audio CLAPOTEE",
     "Educatee/Meta/Auteure": "Cécile Cathelin, professeure de Lettres Modernes depuis 26 ans (11 ans en collège/lycée, en lycée depuis 2011), fondatrice de CLAPOTEE et EDUCATEE, membre de l'association EdTechFrance, trésorière du collectif LE 106, auteure pour les éditions Belin Éducation, Ellipses et Vuibert, fondatrice de l'association Héraclion.",
@@ -17,6 +159,8 @@
     "Educatee/Contact/Email": "cecilecathelin@educatee.fr",
     "Educatee/Outils/Dictionnaire": "Dictionnaire en ligne Le Robert (dictionnaire.lerobert.com/fr/), recommandé pour vérifier l'orthographe, trouver les mots justes et enrichir son vocabulaire.",
     "Educatee/Lecture/Booktrailers": "Booktrailers réalisés pour les Éditions Belin afin de donner envie de découvrir des œuvres marquantes : La Boétie, Chrétien de Troyes, Hugo, Zola, Racine, Tolstoï, Corneille, Maupassant, Graffigny, Fontenelle, Grumberg, Colette, Jules Verne, Claire de Duras, et une anthologie de poétesses.",
+    "Educatee/Lecture/BooktrailersCLAPOTEE": "Vidéos récentes repérées : Pot Bouille et Thérèse Raquin de Zola, Le Chevalier de la charrette de Chrétien de Troyes, Britannicus de Racine, Anna Karénine de Tolstoï, Le dernier jour d'un condamné de Hugo, une anthologie de 30 poèmes baroques et Le Discours de la servitude volontaire de La Boétie.",
+    "Educatee/Litterature/FaitsDivers": "La chaîne CLAPOTEE propose une vidéo intitulée « Les faits divers en littérature » ; sa description ne donne pas d'autres détails sur l'analyse.",
     "Educatee/Organisation/Agenda": "L'agenda des classes permet de visualiser en un coup d'œil les créneaux de cours de chaque semaine et de mieux organiser le travail à venir.",
     "Educatee/Seconde/Devise": "Parce que l'on ne peut que réussir lorsque que l'on sait où l'on va !",
     "Educatee/Seconde/Projet": "L'Odyssée du lecteur",
@@ -35,7 +179,9 @@
     "Educatee/Bac/Entrainement": "L'effort et la discipline régulière sont la clé : chaque échec est une opportunité d'apprentissage pour progresser avec persévérance.",
     "Educatee/Bac/Oeuvres/Sarraute": "Pour un oui ou pour un non de Nathalie Sarraute. Objet d'étude : le théâtre. Parcours associé : Le Misanthrope de Molière. Analyse des sous-conversations et des micro-conflits du langage.",
     "Educatee/Bac/Oeuvres/LaBoetie": "Discours de la servitude volontaire, ou Le Contr'Un, d'Étienne de La Boétie. Objet d'étude : la littérature d'idées. Parcours associé : Jean-Jacques Rousseau. Analyse de la liberté et des mécanismes de tyrannie consentie.",
+    "Educatee/Bac/Oeuvres/LaBoetie/ApportsCLAPOTEE": "Les descriptions des vidéos CLAPOTEE présentent le titre « servitude volontaire » comme un paradoxe, le pouvoir du tyran comme dépendant du consentement et des habitudes du peuple, et l'argumentation comme reposant notamment sur les questions rhétoriques, l'ironie et les exemples. Le parcours associé s'intitule « Défendre et entretenir la liberté » et propose la vigilance, l'éducation et le savoir comme pistes.",
     "Educatee/Bac/Oeuvres/Rimbaud": "Cahiers de Douai d'Arthur Rimbaud. Objet d'étude : la poésie. Émancipation poétique, fugues de jeunesse et révolution des formes.",
+    "Educatee/Bac/Oeuvres/Rimbaud/ApportsCLAPOTEE": "La chaîne propose des lectures linéaires de « Ma Bohème », « Le Mal » et « À la musique » dans Les Cahiers de Douai. La description commune de ces lectures mentionne la satire de Charleville et l'émancipation créatrice de Rimbaud ; une vidéo présente « Zone » d'Apollinaire comme parcours associé.",
     "Educatee/Bac/Oeuvres/ChretienDeTroyes": "Chrétien de Troyes. Objet d'étude : le roman et le récit du Moyen Âge au 21ème siècle. Aventure courtoise et quête chevaleresque.",
     "Educatee/Outils/Flashcards": "Flashcards interactives pour les figures de style, les registres littéraires et la grammaire de seconde et première.",
     "Educatee/Outils/HistoireLitteraire": "Connaître le contexte historique et culturel de la Renaissance au 20ème siècle est indispensable pour situer et interpréter les textes au baccalauréat.",
@@ -51,11 +197,11 @@
         "c'est quoi educatée",
         "d'où viennent tes connaissances"
       ],
-      "nao_tts_short": "Bonjour ! Je suis NAO, ton compagnon de travail pour le français. Toute ma mémoire provient du site Educatée, créé par Cécile Cathelin.",
-      "nao_tts_long": "Bonjour ! Je suis NAO, votre assistant pédagogique pour les cours de français au lycée. Toutes mes connaissances sont issues du site Educatée, conçu par la professeure Cécile Cathelin. Je peux vous guider pour le programme de seconde, ou vous entraîner pour le baccalauréat de français en première !",
+      "nao_tts_short": "Bonjour ! Je suis NAO, ton compagnon de travail pour le français. Mes connaissances viennent du site Educatée et de la chaîne YouTube CLAPOTEE.",
+      "nao_tts_long": "Bonjour ! Je suis NAO, votre assistant pédagogique pour les cours de français au lycée. Mes connaissances s'appuient sur le site Educatée et sur les vidéos de la chaîne CLAPOTEE, créés par la professeure Cécile Cathelin. Je peux vous guider pour le programme de seconde, ou vous entraîner pour le baccalauréat de français en première !",
       "points_cles": [
-        "Source exclusive : educatee.fr",
-        "Auteure : Cécile Cathelin, créatrice des podcasts CLAPOTEE",
+        "Sources : educatee.fr et chaîne YouTube CLAPOTEE",
+        "Cécile Cathelin est présentée dans la base comme créatrice des podcasts CLAPOTEE",
         "Ouvrage associé : Vous allez aimer réussir votre bac de français aux éditions Ellipses"
       ]
     },
@@ -124,7 +270,25 @@
         "Jean Racine", "Tolstoï", "Corneille", "Maupassant", "Graffigny",
         "Fontenelle", "Grumberg", "Colette", "Jules Verne", "Claire de Duras"
       ],
+      "source_video_ids": [
+        "ISY3ZL7987M", "s-5gH_zSXHo", "jzbNPKBENk4", "PIrrvNeeXrQ",
+        "n1NP5O2c7To", "CLteDB-1qGc", "PclTCZvgmOg", "eNO6L-76uF0"
+      ],
       "source_url": "https://www.educatee.fr/vous-allez-aimer-lire/"
+    },
+    {
+      "id": "faits_divers_litterature",
+      "theme": "Culture Littéraire",
+      "triggers": [
+        "faits divers en littérature",
+        "vidéo sur les faits divers",
+        "clapotee faits divers"
+      ],
+      "nao_tts_short": "La chaîne CLAPOTEE propose une vidéo intitulée « Les faits divers en littérature ». Sa description ne précise pas les exemples ou les idées développés.",
+      "nao_tts_long": "Parmi les vidéos publiées par CLAPOTEE figure « Les faits divers en littérature ». Je peux confirmer le thème annoncé par son titre, mais les éléments accessibles ne permettent pas de détailler le contenu de l'analyse.",
+      "source_video_ids": [
+        "HrStcz4BYDo"
+      ]
     },
     {
       "id": "agenda_classes",
@@ -326,7 +490,7 @@
         "tyrannie consentie"
       ],
       "nao_tts_short": "Le Discours de la servitude volontaire de La Boétie s'interroge sur les raisons qui poussent les peuples à se soumettre à un tyran. L'œuvre est liée à Rousseau.",
-      "nao_tts_long": "Pour la littérature d'idées, Étienne de La Boétie dénonce le pouvoir exercé par un seul homme avec le Discours de la servitude volontaire. Educatée met à disposition une carte mentale, une analyse guidée pas à pas, quatre lectures linéaires et une étude comparative avec Jean-Jacques Rousseau.",
+      "nao_tts_long": "Pour la littérature d'idées, Étienne de La Boétie interroge dans le Discours de la servitude volontaire le paradoxe de la soumission acceptée. Les descriptions des vidéos CLAPOTEE relient le pouvoir du tyran au consentement, aux habitudes, aux peurs et aux illusions ; elles présentent aussi les questions rhétoriques, l'ironie et les exemples comme des ressorts de l'argumentation. Le parcours associé s'intitule « Défendre et entretenir la liberté » et met en avant la vigilance, l'éducation et le savoir.",
       "auteur": "Étienne de La Boétie",
       "oeuvre": "Discours de la servitude volontaire (Le Contr'Un)",
       "parcours_associe": "Jean-Jacques Rousseau (fiche PDF dédiée)",
@@ -335,6 +499,16 @@
         "LL2 : L'habitude et l'oubli de la liberté",
         "LL3 : La pyramide des complices du tyran",
         "LL4 (parcours associé) : Texte de Rousseau sur l'origine des inégalités"
+      ],
+      "axes_videos_clapotee": [
+        "Le paradoxe du titre « servitude volontaire », présenté comme un oxymore qui interroge la liberté.",
+        "Le consentement du peuple, les habitudes, les peurs et les illusions dans l'analyse de l'image du tyran.",
+        "La progression argumentative, les questions rhétoriques, l'ironie, les exemples et les procédés de conviction et de persuasion.",
+        "Le parcours associé « Défendre et entretenir la liberté », avec la vigilance, l'éducation et le savoir comme pistes."
+      ],
+      "source_video_ids": [
+        "G2DgYkWTxUc", "ae-8FINb294", "FSXqJIdHV9M", "J5GSf5Q4mwA",
+        "AiTPW5HAgGI", "ullyCTwzGIo", "s5uPhiH01D0", "eNO6L-76uF0"
       ]
     },
     {
@@ -349,11 +523,14 @@
         "poésie de rimbaud"
       ],
       "nao_tts_short": "Les Cahiers de Douai de Rimbaud témoignent de la révolte et de l'émancipation poétique d'un jeune génie de seize ans.",
-      "nao_tts_long": "Dans la séquence poésie, les Cahiers de Douai illustrent la fougue rimbaldienne. Sur Educatée, vous découvrirez ses codes poétiques, quatre lectures linéaires, un sujet de dissertation pas à pas demandant si ce recueil représente une révolution poétique, complété par les séries audio de Sylvain Tesson sur France Inter.",
+      "nao_tts_long": "La chaîne CLAPOTEE propose des lectures linéaires de « Ma Bohème », « Le Mal » et « À la musique », dans Les Cahiers de Douai. Leurs descriptions évoquent la satire de Charleville et l'émancipation créatrice de Rimbaud. Une autre vidéo présente « Zone » d'Apollinaire comme parcours associé à Rimbaud.",
       "auteur": "Arthur Rimbaud",
       "oeuvre": "Cahiers de Douai",
       "sujet_dissertation": "Les Cahiers de Douai représentent-ils une révolution poétique ?",
-      "podcasts_associes": "Un été avec Rimbaud (Sylvain Tesson, France Inter) et série France Culture"
+      "podcasts_associes": "Un été avec Rimbaud (Sylvain Tesson, France Inter) et série France Culture",
+      "source_video_ids": [
+        "0hlXdWn8y6Q", "zXplHfw20tk", "tPJSHd_vDLo", "8C45T1mbCFE"
+      ]
     },
     {
       "id": "oeuvre_chretien",
