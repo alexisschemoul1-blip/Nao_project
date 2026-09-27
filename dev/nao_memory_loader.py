@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(BASE_DIR)
 ROBOT_DIR = os.path.join(PROJECT_DIR, "robot")
 KB_JSON_PATH = os.path.join(ROBOT_DIR, "nao_knowledge_base.json")
-QICHAT_TOP_PATH = os.path.join(ROBOT_DIR, "dialogue_bac_et_seconde.top")
+QICHAT_TOP_PATH = os.path.join(ROBOT_DIR, "educatee_francais_lycee.top")
 
 
 def load_local_knowledge():
@@ -56,11 +56,15 @@ def connect_and_inject_nao(ip="127.0.0.1", port=9559):
         memory.insertData(key, value)
         print(f"  + ALMemory['{key}'] OK")
 
-    # Configuration de la langue et voix
+    # Configuration de la langue et d'une voix plus grave
     try:
         tts.setLanguage("French")
     except Exception:
         pass
+    try:
+        tts.setParameter("pitchShift", 0.8)
+    except Exception as e:
+        print(f"[AVERTISSEMENT] Impossible d'abaisser la hauteur de la voix TTS : {e}")
 
     # Chargement du topic QiChat
     if os.path.exists(QICHAT_TOP_PATH):
