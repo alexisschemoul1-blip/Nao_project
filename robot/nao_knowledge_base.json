@@ -298,7 +298,10 @@
     "Educatee/Seconde/LecturesAudio": "Les Regrets de Du Bellay, Andromaque de Racine, J'accuse et Thérèse Raquin d'Émile Zola.",
     "Educatee/Seconde/Organisation": "Agenda hebdomadaire des cours et accompagnement avec l'application DCOLLE.",
     "Educatee/Bac/Devise": "Le coin des 1ères : Parce que l'on ne peut que réussir lorsque que l'on sait où l'on va !",
-    "Educatee/Bac/Epreuves": "Le Baccalauréat de français comprend une épreuve écrite de 4 heures (commentaire littéraire ou dissertation) et une épreuve orale de 20 minutes (explication linéaire, grammaire et entretien).",
+    "Educatee/Bac/Epreuves": "En première, les épreuves anticipées de français ont un écrit de 4 heures et un oral de 20 minutes, précédé de 30 minutes de préparation. Chaque épreuve a un coefficient 5. À l'écrit, la voie générale propose un commentaire ou une dissertation sur une œuvre au programme ; la voie technologique propose un commentaire ou une contraction de texte suivie d'un essai.",
+    "Educatee/Bac/EpreuvesEcrit": "L'épreuve écrite dure 4 heures. En voie générale, le candidat choisit entre un commentaire littéraire et une dissertation portant sur une œuvre au programme. En voie technologique, il choisit entre un commentaire et une contraction de texte suivie d'un essai.",
+    "Educatee/Bac/EpreuvesOral": "L'oral dure 20 minutes après 30 minutes de préparation. La première partie, sur 12 points, comprend la lecture à voix haute (2 points), l'explication linéaire (8 points) et une question de grammaire (2 points). La seconde partie, sur 8 points, porte sur une œuvre choisie par le candidat : il la présente et explique son choix, puis échange avec l'examinateur.",
+    "Educatee/Bac/Coefficients": "Les deux épreuves anticipées de français, l'écrit et l'oral, ont chacune un coefficient 5.",
     "Educatee/Bac/Methode/Commentaire": "Méthode pas à pas avec To Do List structurée et mémento de formules rédigées pour analyser la forme et le fond.",
     "Educatee/Bac/Methode/Dissertation": "To Do List pour problématiser et bâtir un plan, méthode dissertation Clapotee et répertoire de phrases magiques pour les transitions.",
     "Educatee/Bac/Methode/Oral": "Lecture linéaire rigoureuse en 3 étapes, question de grammaire ciblée et entretien personnel sur l'œuvre choisie par le candidat.",
@@ -521,8 +524,39 @@
         "durée des épreuves du bac de français"
       ],
       "nao_tts_short": "Le bac de français comporte deux épreuves : un écrit de quatre heures et un oral de vingt minutes précédé de trente minutes de préparation.",
-      "nao_tts_long": "Le baccalauréat de français se prépare en classe de première. À l'écrit, vous choisissez entre un commentaire de texte et une dissertation sur œuvre. À l'oral, vous présentez une lecture linéaire avec une question de grammaire, puis vous échangez avec l'examinateur lors d'un entretien.",
+      "nao_tts_long": "En première, les épreuves anticipées de français comprennent un écrit de quatre heures et un oral de vingt minutes précédé de trente minutes de préparation. Chaque épreuve a un coefficient cinq. Les sujets écrits diffèrent selon la voie : commentaire ou dissertation en voie générale ; commentaire ou contraction de texte suivie d'un essai en voie technologique.",
       "rubrique_site": "Le coin des 1ères"
+    },
+    {
+      "id": "bac_epreuve_ecrite",
+      "theme": "Épreuve écrite du bac de français",
+      "triggers": [
+        "modalités de l'écrit du bac de français",
+        "épreuve écrite du bac de français",
+        "choix des sujets à l'écrit du bac",
+        "écrit du bac en voie générale",
+        "écrit du bac en voie technologique",
+        "contraction de texte suivie d'un essai"
+      ],
+      "nao_tts_short": "L'écrit dure quatre heures. En voie générale, vous choisissez entre commentaire et dissertation sur une œuvre au programme. En voie technologique, vous choisissez entre commentaire et contraction de texte suivie d'un essai.",
+      "nao_tts_long": "L'épreuve écrite dure quatre heures. En voie générale, le candidat choisit entre un commentaire littéraire et une dissertation portant sur une œuvre au programme. En voie technologique, il choisit entre un commentaire et une contraction de texte suivie d'un essai.",
+      "coefficient": 5
+    },
+    {
+      "id": "bac_coefficients",
+      "theme": "Coefficients du bac de français",
+      "triggers": [
+        "coefficient des épreuves de français",
+        "coefficients du bac de français",
+        "coefficient de l'écrit de français",
+        "coefficient de l'oral de français"
+      ],
+      "nao_tts_short": "L'écrit et l'oral anticipés de français ont chacun un coefficient cinq.",
+      "nao_tts_long": "Les deux épreuves anticipées de français en classe de première comptent chacune coefficient cinq : l'épreuve écrite et l'épreuve orale.",
+      "coefficients": {
+        "écrit": 5,
+        "oral": 5
+      }
     },
     {
       "id": "bac_methode_commentaire",
@@ -573,10 +607,14 @@
         "entretien de l'oral",
         "bordereau oral",
         "déroulement de l'oral du bac",
+        "déroulement de l'épreuve orale de français",
+        "barème de l'oral de français",
+        "combien de temps pour préparer l'oral",
+        "combien de points pour la lecture linéaire",
         "question de grammaire pendant l'oral"
       ],
-      "nao_tts_short": "L'oral dure vingt minutes : d'abord la lecture à voix haute, l'explication linéaire et la question de grammaire, puis l'entretien sur votre œuvre choisie.",
-      "nao_tts_long": "L'épreuve orale se déroule en deux temps forts. Première partie sur douze points : lecture expressive du texte, explication linéaire méthodique et réponse à la question de grammaire. Deuxième partie sur huit points : entretien argumenté autour d'une œuvre que vous avez choisie et appréciée. Vous pouvez vous auto-évaluer grâce au bordereau officiel 2022 disponible sur Educatée !",
+      "nao_tts_short": "L'oral dure vingt minutes après trente minutes de préparation. Il comprend lecture, explication linéaire et grammaire sur douze points, puis un entretien sur une œuvre choisie sur huit points.",
+      "nao_tts_long": "Après trente minutes de préparation, l'oral dure vingt minutes. Première partie, douze points : lecture à voix haute, explication linéaire et question de grammaire. Seconde partie, huit points : vous présentez l'œuvre que vous avez choisie et les raisons de votre choix, puis échangez avec l'examinateur.",
       "ressources": [
         "Canva : Méthode Lecture Linéaire (CLAPOTEE)",
         "Canva : Méthode Grammaire (CLAPOTEE) et SkechNote Grammaire",

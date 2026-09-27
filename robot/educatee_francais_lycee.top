@@ -1,0 +1,114 @@
+topic: ~educatee_dialog()
+language: frf
+
+# ====================================================================
+# TOPIC QICHAT - ASSISTANT DE FRANÇAIS EDUCATEE POUR NAO
+# Source exclusive : educatee.fr (par Cécile Cathelin)
+# ====================================================================
+
+# --- CONCEPTS (SYNONYMES ET MOTS CLÉS RECONNUS PAR NAO) ---
+concept:(salutations) [bonjour salut "coucou nao" "bonjour nao" "hey nao" "salut nao" "bonsoir nao" "salut tout le monde"]
+concept:(qui_es_tu) ["qui es-tu" "qui êtes-vous" "présente-toi" "comment tu t'appelles" "que peux-tu faire" "c'est quoi ta mémoire" "d'où viennent tes cours" "c'est quoi educatée"]
+concept:(seconde) [seconde "la seconde" "cours de français en seconde" "programme de seconde" "l'odyssée du lecteur" "odyssée du lecteur"]
+concept:(pourquoi_bac_seconde) ["pourquoi le bac en seconde" "pourquoi s'entraîner en seconde" "anticiper le bac en seconde" "conseil seconde" "à quoi sert de préparer le bac en seconde"]
+concept:(bac) ["bac de français" "baccalauréat de français" "épreuves anticipées de français" "épreuves du bac" "programme de première" "le coin des premières" "modalités du bac"]
+concept:(epreuve_ecrite) ["épreuve écrite du bac" "écrit du bac de français" "durée de l'épreuve écrite" "sujets de l'écrit" "commentaire ou dissertation" "sujet de dissertation au bac" "contraction de texte suivie d'un essai" "écrit du bac en voie générale" "écrit du bac en voie technologique"]
+concept:(preparation_oral) ["préparation de l'oral" "temps de préparation de l'oral" "combien de temps pour préparer l'oral" "préparer l'oral du bac" "durée de préparation de l'oral"]
+concept:(bareme_oral) ["barème de l'oral" "points de l'oral" "notation de l'oral de français" "répartition des points à l'oral" "combien de points pour la grammaire" "combien de points pour l'explication linéaire"]
+concept:(coefficients_bac) ["coefficient des épreuves de français" "coefficients du bac de français" "coefficient de l'écrit de français" "coefficient de l'oral de français"]
+concept:(commentaire) [commentaire "commentaire littéraire" "méthode du commentaire" "comment faire un commentaire" "to do list commentaire" "comment analyser un texte" "comment trouver les axes du commentaire"]
+concept:(dissertation) [dissertation "dissertation littéraire" "méthode de la dissertation" "comment faire une dissertation" "phrases magiques" "comment construire un plan de dissertation"]
+concept:(oral) [oral "épreuve orale" "l'oral de français" "comment se passe l'oral" "déroulement de l'oral" "lecture linéaire" "entretien de l'oral" "entretien sur l'œuvre choisie"]
+concept:(sarraute) [sarraute "nathalie sarraute" "pour un oui ou pour un non" "théâtre en première" "le misanthrope et sarraute"]
+concept:(laboetie) ["la boétie" "la boetie" "étienne de la boétie" "discours de la servitude volontaire" "servitude volontaire" "le contr'un" "littérature d'idées"]
+concept:(rimbaud) [rimbaud "arthur rimbaud" "cahiers de douai" "poésie en première" "ma bohème" "le mal de rimbaud" "à la musique de rimbaud"]
+concept:(chretien) ["chrétien de troyes" "chretien de troyes" "roman en première" "roman médiéval"]
+concept:(grammaire) [grammaire "points de grammaire" "question de grammaire" "flashcards de grammaire" "question de grammaire à l'oral"]
+concept:(histoire_litt) ["histoire littéraire" "mouvements littéraires" "les lumières" "classicisme" "renaissance" "contexte historique d'un texte"]
+concept:(audio) [podcasts "ressources audio" "clapotee" "écouter les cours" "podcasts de français"]
+concept:(ia) ["intelligence artificielle" "ia" "chatgpt" "compagnons ia" "dcolle" "utiliser une ia pour réviser"]
+concept:(contact_educatee) ["contacter educatee" "contact de cécile cathelin" "adresse d'educatée" "où se trouve educatee" "téléphone educatee"]
+concept:(dictionnaire) [dictionnaire "dictionnaire le robert" "vérifier l'orthographe" "sens d'un mot"]
+concept:(agenda) [agenda "emploi du temps des cours" "planning des cours" "organiser ma semaine"]
+concept:(booktrailers) [booktrailers "vous allez aimer lire" "présentation de livres" "donner envie de lire"]
+concept:(faits_divers) ["faits divers en littérature" "vidéo sur les faits divers"]
+
+# --- DIALOGUES GESTUELS ET RÉPONSES VOCALES ---
+
+# Présentation
+u:(~qui_es_tu) ^start(animations/Stand/Gestures/Explain_1) Je suis NAO, votre répétiteur de français ! Toutes mes connaissances proviennent du site Educatée, conçu par Cécile Cathelin, professeure et créatrice des podcasts Clapotee. Je peux vous aider pour vos cours de seconde ou vous préparer au bac de français en première !
+
+# Salutations
+u:(~salutations) ^start(animations/Stand/Gestures/Hey_1) Bonjour ! Que souhaites-tu réviser aujourd'hui ? La seconde, le bac de français, ou une œuvre en particulier ?
+
+# Classe de Seconde : Généralités
+u:(~seconde) ^start(animations/Stand/Gestures/Explain_2) En classe de seconde, le projet d'Educatée s'appelle l'Odyssée du lecteur. Il allie l'amour de la lecture, l'étude des mythes et l'analyse d'œuvres comme le tableau Pandora d'Odilon Redon. Son but est de construire des bases solides pour le lycée.
+
+# Seconde : Pourquoi anticiper le Bac
+u:(~pourquoi_bac_seconde) ^start(animations/Stand/Gestures/Enthusiastic_4) Selon Educatée, s'entraîner dès la seconde a trois grands avantages : d'abord, minimiser le stress des examens futurs ; ensuite, améliorer son expression écrite et orale ; et enfin, progresser en continu grâce à des retours bienveillants !
+
+# Bac : Présentation globale
+u:(~bac) ^start(animations/Stand/Gestures/Explain_1) En première, les épreuves anticipées de français comprennent un écrit de quatre heures et un oral de vingt minutes, précédé de trente minutes de préparation. Chaque épreuve compte coefficient cinq. Les sujets écrits dépendent de ta voie.
+
+# Bac : Épreuve écrite
+u:(~epreuve_ecrite) ^start(animations/Stand/Gestures/Explain_1) L'écrit dure quatre heures. En voie générale, tu choisis entre un commentaire littéraire et une dissertation sur une œuvre au programme. En voie technologique, tu choisis entre un commentaire et une contraction de texte suivie d'un essai.
+
+# Bac : Préparation de l'oral
+u:(~preparation_oral) ^start(animations/Stand/Gestures/Explain_2) Avant l'oral, tu disposes de trente minutes de préparation pour étudier le texte tiré au sort et préparer l'explication linéaire ainsi que la question de grammaire. L'épreuve devant l'examinateur dure ensuite vingt minutes.
+
+# Bac : Barème de l'oral
+u:(~bareme_oral) ^start(animations/Stand/Gestures/Explain_2) La première partie vaut douze points : deux pour la lecture à voix haute, huit pour l'explication linéaire et deux pour la grammaire. La seconde partie vaut huit points : tu présentes l'œuvre que tu as choisie et les raisons de ton choix, puis tu échanges avec l'examinateur.
+
+# Bac : Coefficients
+u:(~coefficients_bac) ^start(animations/Stand/Gestures/Explain_1) L'épreuve écrite et l'épreuve orale anticipées de français ont chacune un coefficient cinq.
+
+# Méthode : Commentaire
+u:(~commentaire) ^start(animations/Stand/Gestures/ShowSky_1) Pour le commentaire, commence par lire attentivement le texte et repérer les procédés d'écriture en les reliant à leurs effets et au sens. Organise tes observations en axes cohérents, puis rédige une introduction, des paragraphes argumentés appuyés sur le texte et une conclusion. Educatée propose une To Do List et un mémento de formules pour t'entraîner.
+
+# Méthode : Dissertation
+u:(~dissertation) ^start(animations/Stand/Gestures/Explain_3) Pour la dissertation, analyse les mots du sujet, formule une problématique et construis un plan qui répond à la question. Chaque argument doit être expliqué et appuyé sur des exemples précis de l'œuvre et du parcours associé. Educatée propose une To Do List, une méthode CLAPOTEE et des formules pour articuler les idées.
+
+# Méthode : Épreuve orale
+u:(~oral) ^start(animations/Stand/Gestures/BodyTalk_1) Après trente minutes de préparation, l'oral dure vingt minutes. La première partie dure douze minutes et vaut douze points : lecture à voix haute, explication linéaire et question de grammaire. La seconde partie dure huit minutes et vaut huit points : tu présentes l'œuvre choisie et les raisons de ton choix, puis tu échanges avec l'examinateur.
+
+# Œuvre : Nathalie Sarraute
+u:(~sarraute) ^start(animations/Stand/Gestures/Explain_2) Pour un oui ou pour un non de Nathalie Sarraute est au programme de théâtre. La pièce met en scène deux amis qui se déchirent pour une simple intonation. Educatée propose quatre lectures linéaires et un parcours associé avec Le Misanthrope de Molière.
+
+# Œuvre : La Boétie
+u:(~laboetie) ^start(animations/Stand/Gestures/Thinking_1) Le Discours de la servitude volontaire de La Boétie s'interroge sur la soumission au tyran. Sur Educatée, tu trouveras une carte mentale, une analyse pas à pas et une étude comparative avec Jean-Jacques Rousseau.
+
+# Œuvre : Rimbaud
+u:(~rimbaud) ^start(animations/Stand/Gestures/Enthusiastic_5) Les Cahiers de Douai de Rimbaud célèbrent la liberté et la fugue de jeunesse. Educatée analyse ses codes poétiques et propose un sujet guidé de dissertation pour savoir si ce recueil est une révolution poétique.
+
+# Œuvre : Chrétien de Troyes
+u:(~chretien) ^start(animations/Stand/Gestures/Explain_1) Chrétien de Troyes représente l'objet d'étude sur le roman. Ses récits explorent l'aventure chevaleresque et l'amour courtois au Moyen Âge. Educatée propose quatre lectures linéaires pour l'épreuve orale.
+
+# Grammaire et langue
+u:(~grammaire) ^start(animations/Stand/Gestures/ShowFloor_1) Pour la grammaire, Educatée met à disposition des flashcards interactives adaptées aux exigences de seconde et de première, notamment pour briller sur la question de grammaire à l'oral.
+
+# Histoire Littéraire
+u:(~histoire_litt) ^start(animations/Stand/Gestures/Explain_2) La règle d'or d'Educatée est : sans l'Histoire, on ne peut pas comprendre la Littérature ! Le site propose quinze cours vidéo retraçant l'évolution de la Renaissance au vingtième siècle pour éclairer vos dissertations.
+
+# Podcasts et Audio
+u:(~audio) ^start(animations/Stand/Gestures/Listening_1) Cécile Cathelin a créé les podcasts Clapotee. Ils offrent des synthèses claires pour réviser dans les transports les grandes œuvres de Rabelais, Voltaire, Balzac, Rimbaud et Sarraute.
+
+# Intelligence Artificielle
+u:(~ia) ^start(animations/Stand/Gestures/Thinking_3) Sur Educatée, l'intelligence artificielle est vue comme un outil complémentaire. Elle peut aider à réviser ou stimuler les idées, mais toujours avec esprit critique et sans paresse intellectuelle !
+
+# Contact Educatée
+u:(~contact_educatee) ^start(animations/Stand/Gestures/Explain_1) Educatée se trouve au vingt-six rue Émile Zola, à Tours. Pour les coordonnées complètes, consulte le site educatee.fr.
+
+# Outils de langue
+u:(~dictionnaire) ^start(animations/Stand/Gestures/ShowFloor_1) Pour vérifier l'orthographe, chercher le sens d'un mot ou enrichir ton vocabulaire, Educatée recommande le dictionnaire en ligne Le Robert.
+
+# Organisation
+u:(~agenda) ^start(animations/Stand/Gestures/Explain_2) L'agenda des classes permet de consulter les cours de la semaine et de mieux organiser son travail.
+
+# Lecture plaisir
+u:(~booktrailers) ^start(animations/Stand/Gestures/Enthusiastic_4) La rubrique « Vous allez aimer lire » propose des bandes-annonces de livres pour découvrir des œuvres et donner envie de les lire, notamment celles de Zola, Racine et Victor Hugo.
+
+# Culture littéraire
+u:(~faits_divers) ^start(animations/Stand/Gestures/Explain_2) CLAPOTEE propose une vidéo intitulée « Les faits divers en littérature ». Je peux confirmer le thème annoncé par son titre, mais je ne dispose pas ici d'éléments assez précis pour résumer son analyse.
+
+# Relance si question non comprise
+u:(e:Dialog/NotUnderstood) ^start(animations/Stand/Gestures/Confused_1) Je n'ai pas bien compris. Tu peux me demander des précisions sur les épreuves écrites ou orales du bac, la grammaire, les méthodes de commentaire et de dissertation, les œuvres au programme, la seconde ou les ressources d'Educatée.
