@@ -12,11 +12,11 @@ concept:(qui_es_tu) ["qui es-tu" "qui êtes-vous" "présente-toi" "comment tu t'
 concept:(seconde) [seconde "la seconde" "cours de français en seconde" "programme de seconde" "l'odyssée du lecteur" "odyssée du lecteur"]
 concept:(pourquoi_bac_seconde) ["pourquoi le bac en seconde" "pourquoi s'entraîner en seconde" "anticiper le bac en seconde" "conseil seconde" "à quoi sert de préparer le bac en seconde"]
 concept:(bac) ["bac de français" "baccalauréat de français" "épreuves anticipées de français" "épreuves du bac" "programme de première" "le coin des premières" "modalités du bac"]
-concept:(epreuve_ecrite) ["épreuve écrite du bac" "écrit du bac de français" "durée de l'épreuve écrite" "sujets de l'écrit" "commentaire ou dissertation" "sujet de dissertation au bac" "contraction de texte suivie d'un essai" "écrit du bac en voie générale" "écrit du bac en voie technologique"]
+concept:(epreuve_ecrite) ["épreuve écrite du bac" "écrit du bac de français" "durée de l'épreuve écrite" "sujets de l'écrit" "commentaire ou dissertation" "sujet de dissertation au bac" "c"]
 concept:(preparation_oral) ["préparation de l'oral" "temps de préparation de l'oral" "combien de temps pour préparer l'oral" "préparer l'oral du bac" "durée de préparation de l'oral"]
-concept:(bareme_oral) ["barème de l'oral" "points de l'oral" "notation de l'oral de français" "répartition des points à l'oral" "combien de points pour la grammaire" "combien de points pour l'explication linéaire"]
+concept:(bareme_oral) ["barème de l'oral" "points de l'oral" "notation de l'oral de français" "répartition des points à l'oral" "combien de points pour la grammaire" "combien de points pour l"]
 concept:(coefficients_bac) ["coefficient des épreuves de français" "coefficients du bac de français" "coefficient de l'écrit de français" "coefficient de l'oral de français"]
-concept:(commentaire) [commentaire "commentaire littéraire" "méthode du commentaire" "comment faire un commentaire" "to do list commentaire" "comment analyser un texte" "comment trouver les axes du commentaire"]
+concept:(commentaire) [commentaire "commentaire littéraire" "méthode du commentaire" "comment faire un commentaire" "to do list commentaire" "comment analyser un texte" "comment trouver les axes"]
 concept:(dissertation) [dissertation "dissertation littéraire" "méthode de la dissertation" "comment faire une dissertation" "phrases magiques" "comment construire un plan de dissertation"]
 concept:(oral) [oral "épreuve orale" "l'oral de français" "comment se passe l'oral" "déroulement de l'oral" "lecture linéaire" "entretien de l'oral" "entretien sur l'œuvre choisie"]
 concept:(sarraute) [sarraute "nathalie sarraute" "pour un oui ou pour un non" "théâtre en première" "le misanthrope et sarraute"]
@@ -33,82 +33,128 @@ concept:(agenda) [agenda "emploi du temps des cours" "planning des cours" "organ
 concept:(booktrailers) [booktrailers "vous allez aimer lire" "présentation de livres" "donner envie de lire"]
 concept:(faits_divers) ["faits divers en littérature" "vidéo sur les faits divers"]
 
+# --- NOUVEAUX CONCEPTS : ANALYSE DE TEXTE ---
+concept:(analyse_texte) ["analyse de texte" "comment analyser un texte" "étapes de l'analyse" "méthode d'analyse" "analyser un passage littéraire"]
+concept:(lecture_lineaire) ["lecture linéaire" "comment faire une lecture linéaire" "ligne par ligne" "explication linéaire" "lecture linéaire de poésie"]
+concept:(figures_style) ["figures de style" "métaphore" "comparaison" "allitération" "assonance" "oxymoron" "pléonasme" "énumération" "antithèse" "quelles figures de style"]
+concept:(registres) ["registres littéraires" "registre lyrique" "registre épique" "registre comique" "registre dramatique" "registre ironique" "registre polémique" "registre merveilleux"]
+concept:(lexique) ["analyse du lexique" "champ lexical" "champ sémantique" "connotation" "dénotation" "vocabulaire d'une œuvre" "étude des mots"]
+concept:(syntaxe) ["analyse de la syntaxe" "structure des phrases" "phrases longues" "phrases courtes" "ponctuation" "rythme de la phrase" "asyndète" "polysyndète"]
+concept:(enonciation) ["analyse de l'énonciation" "point de vue" "voix narratrice" "pronom narrateur" "focalisations" "qui parle dans le texte"]
+concept:(intonation) ["intonation d'un texte" "ton d'un auteur" "rythme et sonorités" "allitérations" "assonances" "musicalité du texte" "prosodie"]
+concept:(type_texte) ["types de texte" "texte narratif" "texte argumentatif" "texte descriptif" "texte explicatif" "texte poétique" "distinguer les types de texte"]
+concept:(procedes) ["procédés littéraires" "procédés rhétoriques" "procédés d'écriture" "techniques d'écriture" "modes d'énonciation"]
+
 # --- DIALOGUES GESTUELS ET RÉPONSES VOCALES ---
 
 # Présentation
-u:(~qui_es_tu) ^start(animations/Stand/Gestures/Explain_1) Je suis NAO, votre répétiteur de français ! Toutes mes connaissances proviennent du site Educatée, conçu par Cécile Cathelin, professeure et créatrice des podcasts Clapotee. Je peux vous aider pour vos cours de seconde ou vous préparer au bac de français en première !
+u:(~qui_es_tu) ^start(animations/Stand/Gestures/Explain_1) Je suis NAO, votre répétiteur de français ! Toutes mes connaissances proviennent du site Educatée, conçu par Cécile Cathelin, profe
 
 # Salutations
 u:(~salutations) ^start(animations/Stand/Gestures/Hey_1) Bonjour ! Que souhaites-tu réviser aujourd'hui ? La seconde, le bac de français, ou une œuvre en particulier ?
 
 # Classe de Seconde : Généralités
-u:(~seconde) ^start(animations/Stand/Gestures/Explain_2) En classe de seconde, le projet d'Educatée s'appelle l'Odyssée du lecteur. Il allie l'amour de la lecture, l'étude des mythes et l'analyse d'œuvres comme le tableau Pandora d'Odilon Redon. Son but est de construire des bases solides pour le lycée.
+u:(~seconde) ^start(animations/Stand/Gestures/Explain_2) En classe de seconde, le projet d'Educatée s'appelle l'Odyssée du lecteur. Il allie l'amour de la lecture, l'étude des mythes et l'analy
 
 # Seconde : Pourquoi anticiper le Bac
-u:(~pourquoi_bac_seconde) ^start(animations/Stand/Gestures/Enthusiastic_4) Selon Educatée, s'entraîner dès la seconde a trois grands avantages : d'abord, minimiser le stress des examens futurs ; ensuite, améliorer son expression écrite et orale ; et enfin, progresser en continu grâce à des retours bienveillants !
+u:(~pourquoi_bac_seconde) ^start(animations/Stand/Gestures/Enthusiastic_4) Selon Educatée, s'entraîner dès la seconde a trois grands avantages : d'abord, minimiser le stress des examens futurs 
 
 # Bac : Présentation globale
-u:(~bac) ^start(animations/Stand/Gestures/Explain_1) En première, les épreuves anticipées de français comprennent un écrit de quatre heures et un oral de vingt minutes, précédé de trente minutes de préparation. Chaque épreuve compte coefficient cinq. Les sujets écrits dépendent de ta voie.
+u:(~bac) ^start(animations/Stand/Gestures/Explain_1) En première, les épreuves anticipées de français comprennent un écrit de quatre heures et un oral de vingt minutes, précédé de trente m
 
 # Bac : Épreuve écrite
-u:(~epreuve_ecrite) ^start(animations/Stand/Gestures/Explain_1) L'écrit dure quatre heures. En voie générale, tu choisis entre un commentaire littéraire et une dissertation sur une œuvre au programme. En voie technologique, tu choisis entre un commentaire et une contraction de texte suivie d'un essai.
+u:(~epreuve_ecrite) ^start(animations/Stand/Gestures/Explain_1) L'écrit dure quatre heures. En voie générale, tu choisis entre un commentaire littéraire et une dissertation sur une œuvre au p
 
 # Bac : Préparation de l'oral
-u:(~preparation_oral) ^start(animations/Stand/Gestures/Explain_2) Avant l'oral, tu disposes de trente minutes de préparation pour étudier le texte tiré au sort et préparer l'explication linéaire ainsi que la question de grammaire. L'épreuve devant l'examinateur dure ensuite vingt minutes.
+u:(~preparation_oral) ^start(animations/Stand/Gestures/Explain_2) Avant l'oral, tu disposes de trente minutes de préparation pour étudier le texte tiré au sort et préparer l'explication linéa
 
 # Bac : Barème de l'oral
-u:(~bareme_oral) ^start(animations/Stand/Gestures/Explain_2) La première partie vaut douze points : deux pour la lecture à voix haute, huit pour l'explication linéaire et deux pour la grammaire. La seconde partie vaut huit points : tu présentes l'œuvre que tu as choisie et les raisons de ton choix, puis tu échanges avec l'examinateur.
+u:(~bareme_oral) ^start(animations/Stand/Gestures/Explain_2) La première partie vaut douze points : deux pour la lecture à voix haute, huit pour l'explication linéaire et deux pour la grammaire
 
 # Bac : Coefficients
 u:(~coefficients_bac) ^start(animations/Stand/Gestures/Explain_1) L'épreuve écrite et l'épreuve orale anticipées de français ont chacune un coefficient cinq.
 
 # Méthode : Commentaire
-u:(~commentaire) ^start(animations/Stand/Gestures/ShowSky_1) Pour le commentaire, commence par lire attentivement le texte et repérer les procédés d'écriture en les reliant à leurs effets et au sens. Organise tes observations en axes cohérents, puis rédige une introduction, des paragraphes argumentés appuyés sur le texte et une conclusion. Educatée propose une To Do List et un mémento de formules pour t'entraîner.
+u:(~commentaire) ^start(animations/Stand/Gestures/ShowSky_1) Pour le commentaire, commence par lire attentivement le texte et repérer les procédés d'écriture en les reliant à leurs effets et 
 
 # Méthode : Dissertation
-u:(~dissertation) ^start(animations/Stand/Gestures/Explain_3) Pour la dissertation, analyse les mots du sujet, formule une problématique et construis un plan qui répond à la question. Chaque argument doit être expliqué et appuyé sur des exemples précis de l'œuvre et du parcours associé. Educatée propose une To Do List, une méthode CLAPOTEE et des formules pour articuler les idées.
+u:(~dissertation) ^start(animations/Stand/Gestures/Explain_3) Pour la dissertation, analyse les mots du sujet, formule une problématique et construis un plan qui répond à la question. Chaque ar
 
 # Méthode : Épreuve orale
-u:(~oral) ^start(animations/Stand/Gestures/BodyTalk_1) Après trente minutes de préparation, l'oral dure vingt minutes. La première partie dure douze minutes et vaut douze points : lecture à voix haute, explication linéaire et question de grammaire. La seconde partie dure huit minutes et vaut huit points : tu présentes l'œuvre choisie et les raisons de ton choix, puis tu échanges avec l'examinateur.
+u:(~oral) ^start(animations/Stand/Gestures/BodyTalk_1) Après trente minutes de préparation, l'oral dure vingt minutes. La première partie dure douze minutes et vaut douze points : lecture à vo
 
 # Œuvre : Nathalie Sarraute
-u:(~sarraute) ^start(animations/Stand/Gestures/Explain_2) Pour un oui ou pour un non de Nathalie Sarraute est au programme de théâtre. La pièce met en scène deux amis qui se déchirent pour une simple intonation. Educatée propose quatre lectures linéaires et un parcours associé avec Le Misanthrope de Molière.
+u:(~sarraute) ^start(animations/Stand/Gestures/Explain_2) Pour un oui ou pour un non de Nathalie Sarraute est au programme de théâtre. La pièce met en scène deux amis qui se déchirent pour un
 
 # Œuvre : La Boétie
-u:(~laboetie) ^start(animations/Stand/Gestures/Thinking_1) Le Discours de la servitude volontaire de La Boétie s'interroge sur la soumission au tyran. Sur Educatée, tu trouveras une carte mentale, une analyse pas à pas et une étude comparative avec Jean-Jacques Rousseau.
+u:(~laboetie) ^start(animations/Stand/Gestures/Thinking_1) Le Discours de la servitude volontaire de La Boétie s'interroge sur la soumission au tyran. Sur Educatée, tu trouveras une carte mental
 
 # Œuvre : Rimbaud
-u:(~rimbaud) ^start(animations/Stand/Gestures/Enthusiastic_5) Les Cahiers de Douai de Rimbaud célèbrent la liberté et la fugue de jeunesse. Educatée analyse ses codes poétiques et propose un sujet guidé de dissertation pour savoir si ce recueil est une révolution poétique.
+u:(~rimbaud) ^start(animations/Stand/Gestures/Enthusiastic_5) Les Cahiers de Douai de Rimbaud célèbrent la liberté et la fugue de jeunesse. Educatée analyse ses codes poétiques et propose un 
 
 # Œuvre : Chrétien de Troyes
-u:(~chretien) ^start(animations/Stand/Gestures/Explain_1) Chrétien de Troyes représente l'objet d'étude sur le roman. Ses récits explorent l'aventure chevaleresque et l'amour courtois au Moyen Âge. Educatée propose quatre lectures linéaires pour l'épreuve orale.
+u:(~chretien) ^start(animations/Stand/Gestures/Explain_1) Chrétien de Troyes représente l'objet d'étude sur le roman. Ses récits explorent l'aventure chevaleresque et l'amour courtois au Moyen
 
 # Grammaire et langue
-u:(~grammaire) ^start(animations/Stand/Gestures/ShowFloor_1) Pour la grammaire, Educatée met à disposition des flashcards interactives adaptées aux exigences de seconde et de première, notamment pour briller sur la question de grammaire à l'oral.
+u:(~grammaire) ^start(animations/Stand/Gestures/ShowFloor_1) Pour la grammaire, Educatée met à disposition des flashcards interactives adaptées aux exigences de seconde et de première, notamme
 
 # Histoire Littéraire
-u:(~histoire_litt) ^start(animations/Stand/Gestures/Explain_2) La règle d'or d'Educatée est : sans l'Histoire, on ne peut pas comprendre la Littérature ! Le site propose quinze cours vidéo retraçant l'évolution de la Renaissance au vingtième siècle pour éclairer vos dissertations.
+u:(~histoire_litt) ^start(animations/Stand/Gestures/Explain_2) La règle d'or d'Educatée est : sans l'Histoire, on ne peut pas comprendre la Littérature ! Le site propose quinze cours vidéo ret
 
 # Podcasts et Audio
-u:(~audio) ^start(animations/Stand/Gestures/Listening_1) Cécile Cathelin a créé les podcasts Clapotee. Ils offrent des synthèses claires pour réviser dans les transports les grandes œuvres de Rabelais, Voltaire, Balzac, Rimbaud et Sarraute.
+u:(~audio) ^start(animations/Stand/Gestures/Listening_1) Cécile Cathelin a créé les podcasts Clapotee. Ils offrent des synthèses claires pour réviser dans les transports les grandes œuvres d
 
 # Intelligence Artificielle
-u:(~ia) ^start(animations/Stand/Gestures/Thinking_3) Sur Educatée, l'intelligence artificielle est vue comme un outil complémentaire. Elle peut aider à réviser ou stimuler les idées, mais toujours avec esprit critique et sans paresse intellectuelle !
+u:(~ia) ^start(animations/Stand/Gestures/Thinking_3) Sur Educatée, l'intelligence artificielle est vue comme un outil complémentaire. Elle peut aider à réviser ou stimuler les idées, mais tou
 
 # Contact Educatée
 u:(~contact_educatee) ^start(animations/Stand/Gestures/Explain_1) Educatée se trouve au vingt-six rue Émile Zola, à Tours. Pour les coordonnées complètes, consulte le site educatee.fr.
 
 # Outils de langue
-u:(~dictionnaire) ^start(animations/Stand/Gestures/ShowFloor_1) Pour vérifier l'orthographe, chercher le sens d'un mot ou enrichir ton vocabulaire, Educatée recommande le dictionnaire en ligne Le Robert.
+u:(~dictionnaire) ^start(animations/Stand/Gestures/ShowFloor_1) Pour vérifier l'orthographe, chercher le sens d'un mot ou enrichir ton vocabulaire, Educatée recommande le dictionnaire en ligne 
 
 # Organisation
 u:(~agenda) ^start(animations/Stand/Gestures/Explain_2) L'agenda des classes permet de consulter les cours de la semaine et de mieux organiser son travail.
 
 # Lecture plaisir
-u:(~booktrailers) ^start(animations/Stand/Gestures/Enthusiastic_4) La rubrique « Vous allez aimer lire » propose des bandes-annonces de livres pour découvrir des œuvres et donner envie de les lire, notamment celles de Zola, Racine et Victor Hugo.
+u:(~booktrailers) ^start(animations/Stand/Gestures/Enthusiastic_4) La rubrique « Vous allez aimer lire » propose des bandes-annonces de livres pour découvrir des œuvres et donner envie de les
 
 # Culture littéraire
-u:(~faits_divers) ^start(animations/Stand/Gestures/Explain_2) CLAPOTEE propose une vidéo intitulée « Les faits divers en littérature ». Je peux confirmer le thème annoncé par son titre, mais je ne dispose pas ici d'éléments assez précis pour résumer son analyse.
+u:(~faits_divers) ^start(animations/Stand/Gestures/Explain_2) CLAPOTEE propose une vidéo intitulée « Les faits divers en littérature ». Je peux confirmer le thème annoncé par son titre, ma
+
+# ====================================================================
+# NOUVEAUX DIALOGUES : ANALYSE DE TEXTE
+# ====================================================================
+
+# Analyse de texte : Généralités
+u:(~analyse_texte) ^start(animations/Stand/Gestures/ShowSky_1) L'analyse d'un texte passe par plusieurs étapes. D'abord, repère le type de texte et son contexte. Ensuite, étudie le lexique, la syntaxe et les figures de style. Relie toujours les procédés aux effets qu'ils produisent sur le lecteur. C'est la clé du commentaire réussi !
+
+# Lecture linéaire
+u:(~lecture_lineaire) ^start(animations/Stand/Gestures/Explain_3) La lecture linéaire examine le texte phrase par phrase. Tu dois repérer les tournures remarquables, les figures de style, les changements de ton. Puis, tu expliques comment chaque élément contribue au sens global. Trois lectures linéaires attendent au bac !
+
+# Figures de style
+u:(~figures_style) ^start(animations/Stand/Gestures/ShowSky_1) Les figures de style sont les outils du poète. La métaphore remplace un mot par un autre pour une comparaison implicite. L'antithèse oppose deux idées. L'allitération répète des sons au début des mots. À chaque figure, demande-toi : quel effet crée-t-elle ? Pourquoi l'auteur la choisit-il ?
+
+# Registres littéraires
+u:(~registres) ^start(animations/Stand/Gestures/Thinking_1) Les registres colorent le texte. Le registre lyrique exprime les sentiments. L'épique grandit les exploits. Le comique provoque le rire. Le dramatique crée la tension. Le ironique dit le contraire de ce qu'on pense. Le polémique attaque. Identifie le registre pour mieux comprendre l'intention de l'auteur.
+
+# Champ lexical et sémantique
+u:(~lexique) ^start(animations/Stand/Gestures/ShowFloor_1) Le champ lexical groupe les mots d'un même domaine. Si tu vois répétés beauté, lumière, éclat, c'est le champ lexical de la lumière. Les mots ont aussi une connotation : au-delà de leur sens premier, ils portent une charge émotionnelle. Rose suggère l'amour, tandis que gris suggère la tristesse. Observe comment l'auteur joue avec les sens des mots.
+
+# Syntaxe et structure
+u:(~syntaxe) ^start(animations/Stand/Gestures/Explain_2) La syntaxe structure le sens. Les phrases longues ralentissent la lecture. Les phrases courtes créent du rythme ou du suspense. La ponctuation guide le ton. L'asyndète, qui supprime les conjonctions, accélère. La polysyndète, qui en ajoute, ralentit. Chaque choix grammatical a une intention.
+
+# Énonciation et point de vue
+u:(~enonciation) ^start(animations/Stand/Gestures/BodyTalk_1) L'énonciation, c'est : qui parle et de quel point de vue ? Le narrateur peut être témoin ou héros. La focalisation peut être externe, interne ou omnisciente. Les pronoms je, tu, il créent une distance différente. Décoder l'énonciation te donne accès au regard de l'auteur sur son histoire.
+
+# Intonation et rythme
+u:(~intonation) ^start(animations/Stand/Gestures/Listening_1) L'intonation d'un texte, c'est son âme sonore. L'allitération répète un son pour créer une harmonie. L'assonance répète une voyelle pour une musicalité. Le rythme des phrases peut être rapide et staccato ou lent et ample. À l'oral, tu lis en restituant cette musicalité. C'est en lisant à voix haute que tu la découvres vraiment.
+
+# Types de texte
+u:(~type_texte) ^start(animations/Stand/Gestures/Explain_1) Chaque type de texte a sa fonction. Le texte narratif raconte une histoire. L'argumentatif défend une thèse. Le descriptif peint un univers. L'explicatif enseigne. Le poétique joue avec la forme et les sons. Identifier le type te dit déjà comment aborder l'analyse.
+
+# Procédés littéraires
+u:(~procedes) ^start(animations/Stand/Gestures/ShowSky_1) Les procédés sont les techniques de l'écrivain. La progression thématique ordonne l'information. L'énumération accumule. Le paradoxe surprend. La personnification donne vie aux choses inanimées. Le symbole charge un objet de sens. Chaque procédé crée un effet particulier. Ton travail : comprendre lequel et pourquoi.
 
 # Relance si question non comprise
-u:(e:Dialog/NotUnderstood) ^start(animations/Stand/Gestures/Confused_1) Je n'ai pas bien compris. Tu peux me demander des précisions sur les épreuves écrites ou orales du bac, la grammaire, les méthodes de commentaire et de dissertation, les œuvres au programme, la seconde ou les ressources d'Educatée.
+u:(e:Dialog/NotUnderstood) ^start(animations/Stand/Gestures/Confused_1) Je n'ai pas bien compris. Tu peux me demander des précisions sur les épreuves écrites ou orales du bac, la grammaire, l'analyse de texte, les figures de style, ou les œuvres au programme. Je suis là pour t'aider !
