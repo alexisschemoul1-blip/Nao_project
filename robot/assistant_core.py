@@ -153,6 +153,11 @@ class MemoryStore:
         "appelles": "identite",
         "surnom": "identite",
     }
+    
+    # Filtres de validation
+    MIN_MEMORY_LENGTH = 5          # Minimum 5 caractères
+    MAX_MEMORY_LENGTH = 500        # Maximum 500 caractères
+    MIN_MEANINGFUL_WORDS = 2       # Au moins 2 mots significatifs
 
     def __init__(self, path):
         self.path = path
@@ -192,17 +197,79 @@ class MemoryStore:
                 except OSError as exc:
                     logger.warning("Impossible de supprimer le fichier temporaire '%s' : %s", temporary_path, exc)
 
+    def _is_duplicate(self, text):
+        """Vérifie si un souvenir identique ou très similaire existe déjà."""
+        normalized_new = KnowledgeBase._normalise(text)
+        data = self._read()
+        for item in data["souvenirs"]:
+            if not isinstance(item, dict):
+                continue
+            existing_text = item.get("texte", "")
+            normalized_existing = KnowledgeBase._normalise(existing_text)
+            # Vérifier correspondance exacte ou très proche (>90%)
+            similarity = difflib.SequenceMatcher(None, normalized_new, normalized_existing).ratio()
+            if similarity > 0.9:
+                logger.info("Souvenir détecté comme doublon (similarité: %.2f)", similarity)
+                return True
+        return False
+
+    def _is_valid_content(self, text):
+        """Valide le contenu du souvenir selon plusieurs critères."""
+        content = to_text(text).strip()
+        
+        # Vérifier la longueur
+        if len(content) < self.MIN_MEMORY_LENGTH:
+            logger.warning("Souvenir trop court (%d caractères, minimum: %d)", 
+                          len(content), self.MIN_MEMORY_LENGTH)
+            return False, "Le souvenir est trop court (minimum 5 caractères)."
+        
+        if len(content) > self.MAX_MEMORY_LENGTH:
+            logger.warning("Souvenir trop long (%d caractères, maximum: %d)", 
+                          len(content), self.MAX_MEMORY_LENGTH)
+            return False, "Le souvenir est trop long (maximum 500 caractères)."
+        
+        # Vérifier qu'il contient au minimum des mots significatifs
+        words = self._search_terms(content)
+        if len(words) < self.MIN_MEANINGFUL_WORDS:
+            logger.warning("Souvenir avec trop peu de mots significatifs (%d, minimum: %d)",
+                          len(words), self.MIN_MEANINGFUL_WORDS)
+            return False, "Le souvenir doit contenir au moins 2 mots significatifs."
+        
+        # Vérifier qu'il ne s'agit pas que de nombres ou caractères spéciaux
+        if not re.search(r"[a-zA-Zàâäéèêëïîôùûüœæç]", content, re.IGNORECASE):
+            logger.warning("Souvenir contenant aucun caractère alphabétique")
+            return False, "Le souvenir doit contenir des lettres."
+        
+        # Vérifier la présence de doublons
+        if self._is_duplicate(content):
+            return False, "Ce souvenir existe déjà ou est très similaire à un souvenir existant."
+        
+        return True, None
+
     def add(self, text):
         content = to_text(text).strip()
         if not content:
-            return False
-        data = self._read()
-        data["souvenirs"].append({
-            "texte": content,
-            "enregistre_le": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-        })
-        self._write(data)
-        return True
+            return False, "Le souvenir est vide."
+        
+        # Valider le contenu
+        is_valid, error_message = self._is_valid_content(content)
+        if not is_valid:
+            logger.warning("Souvenir rejeté : %s", error_message)
+            return False, error_message
+        
+        # Ajouter le souvenir
+        try:
+            data = self._read()
+            data["souvenirs"].append({
+                "texte": content,
+                "enregistre_le": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+            })
+            self._write(data)
+            logger.info("Souvenir ajouté avec succès : %s", content[:50])
+            return True, None
+        except (IOError, OSError, ValueError) as exc:
+            logger.error("Erreur lors de l'ajout du souvenir : %s", exc)
+            return False, "Erreur technique lors de l'enregistrement."
 
     def search(self, question, top_k=3, min_score=0.34):
         """Finds saved memories sharing meaningful words with the question."""
@@ -353,7 +420,7 @@ class Assistant:
             self.robot.say("Indique le souvenir après le mot Souvenir.")
         else:
             try:
-                saved = self.memory.add(content)
+                saved, error_message = self.memory.add(content)
             except (IOError, OSError, ValueError) as exc:
                 logger.error("Impossible d'enregistrer le souvenir : %s", exc)
                 self.robot.say("Je n'ai pas pu enregistrer ce souvenir.")
@@ -361,7 +428,9 @@ class Assistant:
                 if saved:
                     self.robot.say("C'est noté, je garderai ce souvenir.")
                 else:
-                    self.robot.say("Indique le souvenir après le mot Souvenir.")
+                    # Le message d'erreur est maintenant retourné par add()
+                    error_msg = error_message or "Données invalides."
+                    self.robot.say(u"Je ne peux pas enregistrer ce souvenir. {0}".format(error_msg))
         return True
 
     def handle_question(self, question):
