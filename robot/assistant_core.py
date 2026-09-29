@@ -154,6 +154,19 @@ class MemoryStore:
         "surnom": "identite",
     }
     
+    # Mots et expressions vulgaires ou inappropriées pour un contexte scolaire
+    VULGAR_WORDS = set((
+        # Termes vulgaires courants en français
+        "putain", "connard", "salaud", "merde", "saloperie", "encule",
+        "con", "conne", "connasse", "nique", "baise", "bite", "couille",
+        "seins", "chatte", "cul", "trou", "pute", "puto", "puta",
+        "bordel", "caca", "pipi", "prout", "rot",
+        # Variantes et diminutifs
+        "petit con", "petit connard", "grande pute",
+        # Insultes graves
+        "debile", "debiles", "retarde", "retardes", "fou", "folle",
+    ))
+    
     # Filtres de validation
     MIN_MEMORY_LENGTH = 5          # Minimum 5 caractères
     MAX_MEMORY_LENGTH = 500        # Maximum 500 caractères
@@ -213,6 +226,18 @@ class MemoryStore:
                 return True
         return False
 
+    def _contains_vulgar_content(self, text):
+        """Détecte la présence de termes vulgaires ou inappropriés."""
+        normalized = KnowledgeBase._normalise(text)
+        words = re.findall(r"[a-z]+", normalized)
+        
+        for word in words:
+            if word in self.VULGAR_WORDS:
+                logger.warning("Souvenir rejeté : mot vulgaire détecté '%s'", word)
+                return True
+        
+        return False
+
     def _is_valid_content(self, text):
         """Valide le contenu du souvenir selon plusieurs critères."""
         content = to_text(text).strip()
@@ -227,6 +252,10 @@ class MemoryStore:
             logger.warning("Souvenir trop long (%d caractères, maximum: %d)", 
                           len(content), self.MAX_MEMORY_LENGTH)
             return False, "Le souvenir est trop long (maximum 500 caractères)."
+        
+        # Vérifier la présence de contenu vulgaire
+        if self._contains_vulgar_content(content):
+            return False, "Le souvenir contient du langage inapproprié. Veuillez reformuler poliment."
         
         # Vérifier qu'il contient au minimum des mots significatifs
         words = self._search_terms(content)
