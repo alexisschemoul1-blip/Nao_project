@@ -16,9 +16,16 @@ from robot.nao_hardware import NaoInterface
 class FakeRobot:
     def __init__(self):
         self.spoken = []
+        self.inputs = []
 
     def say(self, text):
         self.spoken.append(text)
+
+    def listen(self):
+        return self.inputs.pop(0)
+
+    def push_knowledge_to_almemory(self, values):
+        pass
 
 
 class FakeBrain:
@@ -45,7 +52,7 @@ class FakeMemory(MemoryStore):
 
     def add(self, text):
         self.items.append({"texte": text})
-        return True
+        return True, None
 
     def search(self, question):
         return MemoryStore.search(self, question)
@@ -106,6 +113,15 @@ class AssistantQuestionTests(unittest.TestCase):
 
         self.assertEqual(answer, "Réponse Mistral")
         self.assertEqual(self.brain.calls, ["question inconnue"])
+
+    def test_run_routes_recognized_voice_input_through_question_handler(self):
+        self.robot.inputs = ["question inconnue", "stop"]
+
+        self.assistant.run()
+
+        self.assertEqual(self.brain.calls, ["question inconnue"])
+        self.assertIn("Réponse Mistral", self.robot.spoken)
+        self.assertEqual(self.robot.spoken[-1], "À bientôt !")
 
     def test_mistral_follow_up_receives_previous_local_and_remote_turns(self):
         self.assistant.handle_question("question inconnue")
@@ -222,6 +238,49 @@ class NaoInterfaceTests(unittest.TestCase):
         robot.say("Je continue sans gestes.")
 
         robot.tts.say.assert_called_once_with("Je continue sans gestes.")
+
+    def test_listen_sets_french_vocabulary_and_returns_recognized_phrase(self):
+        robot = NaoInterface.__new__(NaoInterface)
+        robot.asr = Mock()
+        robot.memory = Mock()
+        robot.memory.insertData = Mock()
+        robot.memory.getData.return_value = ["qui es-tu", 0.8]
+        robot.vocabulary = ["bonjour", "qui es-tu"]
+
+        with patch("robot.nao_hardware.time.time", return_value=0):
+            with patch("robot.nao_hardware.time.sleep"):
+                phrase = robot.listen()
+
+        self.assertEqual(phrase, "qui es-tu")
+        robot.asr.setLanguage.assert_called_once_with("French")
+        robot.asr.setVocabulary.assert_called_once_with(
+            ["bonjour", "qui es-tu"],
+            True,
+        )
+        robot.memory.insertData.assert_called_once_with(
+            "WordRecognized",
+            ["", 0.0],
+        )
+        robot.asr.subscribe.assert_called_once_with("nao_assistant")
+        robot.asr.unsubscribe.assert_called_once_with("nao_assistant")
+
+    def test_listen_ignores_low_confidence_recognition(self):
+        robot = NaoInterface.__new__(NaoInterface)
+        robot.asr = Mock()
+        robot.memory = Mock()
+        robot.memory.getData.side_effect = [
+            ["question inconnue", 0.2],
+            ["question inconnue", 0.8],
+        ]
+        robot.vocabulary = ["question inconnue"]
+
+        with patch("robot.nao_hardware.time.time", side_effect=[0, 1, 2]):
+            with patch("robot.nao_hardware.time.sleep"):
+                phrase = robot.listen()
+
+        self.assertEqual(phrase, "question inconnue")
+        self.assertEqual(robot.memory.getData.call_count, 2)
+        robot.asr.unsubscribe.assert_called_once_with("nao_assistant")
 
 
 class MemoryStoreTests(unittest.TestCase):

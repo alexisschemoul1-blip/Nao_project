@@ -37,7 +37,16 @@ def main():
     knowledge = KnowledgeBase(args.kb)
     memory = MemoryStore(args.memory_file)
     brain = MistralBrain(args.mistral_api_key, args.mistral_model)
-    robot = NaoInterface(ip="127.0.0.1", port=args.robot_port)
+    vocabulary = []
+    for entry in knowledge.entries:
+        vocabulary.extend(entry.get("triggers", []))
+        if entry.get("theme"):
+            vocabulary.append(entry["theme"])
+    robot = NaoInterface(
+        ip="127.0.0.1",
+        port=args.robot_port,
+        vocabulary=vocabulary,
+    )
     Assistant(robot, knowledge, brain, memory, args.verbose).run()
 
 
