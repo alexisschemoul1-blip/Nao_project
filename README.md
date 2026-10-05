@@ -12,7 +12,7 @@ Sur le robot, `robot/main.py` :
 
 1. Il charge `nao_knowledge_base.json` en UTF-8, qui contient l'identité du robot, les réponses pédagogiques et les clés à publier dans `ALMemory`.
 2. Il ouvre `memoire.json`, fichier séparé dans lequel les souvenirs dictés par l'utilisateur sont enregistrés et conservés entre les redémarrages.
-3. Il se connecte aux services NAOqi locaux : reconnaissance vocale, synthèse vocale et mémoire du robot. La hauteur TTS est réglée à `0.8` pour rendre la voix plus grave.
+3. Il se connecte aux services NAOqi locaux : reconnaissance vocale, synthèse vocale et mémoire du robot. La reconnaissance vocale est configurée en français avec les déclencheurs de la base de connaissances. La hauteur TTS est réglée à `0.8` pour rendre la voix plus grave.
 4. Il écoute une question et cherche d'abord un déclencheur explicite dans la base de connaissances. Si une réponse correspond, elle est prononcée sans appel à l'IA ; les souvenirs pertinents peuvent compléter cette réponse.
 5. Si la base ne répond pas, il recherche les souvenirs pertinents dans `memoire.json`. Sans clé Mistral, le robot restitue les informations mémorisées directement et localement. Avec Mistral, les souvenirs pertinents sont transmis comme contexte pour aider à répondre.
 6. Une demande commençant par « Souvenir » ajoute le texte qui suit dans `memoire.json`. Les informations ainsi apprises sont disponibles aux questions suivantes.
@@ -139,6 +139,7 @@ python3 dev/nao_memory_loader.py --simu
 - La base de connaissances et la mémoire utilisateur sont conservées localement. Les souvenirs pertinents ne quittent le robot que si un appel Mistral est activé pour répondre à une question.
 - `robot/main.py` et les modules qu'il importe doivent rester compatibles avec Python 2.7 ; la simulation PC, le chargeur et les tests sont exécutés avec Python 3.
 - La recherche des souvenirs est lexicale et peut manquer les paraphrases ; une recherche sémantique reste une évolution possible.
+- La reconnaissance vocale intégrée à NAO est limitée au vocabulaire configuré à partir des déclencheurs de la base. Elle ne transcrit pas librement toute phrase : les questions inconnues et le contenu dicté après « Souvenir » peuvent donc ne pas être transmis tels quels au reste du script.
 - Les sources pédagogiques sont structurées à partir des ressources Educatée et CLAPOTEE ; la base JSON reste modifiable indépendamment du code.
 
 ## Licence

@@ -21,9 +21,21 @@ def to_naoqi_text(value):
     return value.encode("utf-8")
 
 class NaoInterface:
-    def __init__(self, ip="127.0.0.1", port=9559):
+    def __init__(self, ip="127.0.0.1", port=9559, vocabulary=None):
         self.ip, self.port = ip, port
         self.tts = self.asr = self.memory = self.animated_speech = None
+        self.vocabulary = [
+            "bonjour", "salut", "au revoir", "stop", "quitter", "exit", "souvenir"
+        ]
+        if vocabulary:
+            self.vocabulary.extend(vocabulary)
+        unique_vocabulary = []
+        seen_phrases = set()
+        for phrase in self.vocabulary:
+            if phrase not in seen_phrases:
+                unique_vocabulary.append(phrase)
+                seen_phrases.add(phrase)
+        self.vocabulary = unique_vocabulary
         self._connect_robot()
 
     def _connect_robot(self):
@@ -79,17 +91,38 @@ class NaoInterface:
             logger.error("Erreur TTS : %s", exc)
 
     def listen(self):
+        subscribed = False
         try:
             self.asr.setLanguage(to_naoqi_text("French"))
+            self.asr.setVocabulary(
+                [to_naoqi_text(phrase) for phrase in self.vocabulary],
+                True,
+            )
+            self.memory.insertData("WordRecognized", ["", 0.0])
             self.asr.subscribe(to_naoqi_text("nao_assistant"))
+            subscribed = True
             start = time.time()
             while time.time() - start < 15:
                 data = self.memory.getData("WordRecognized")
-                if isinstance(data, (list, tuple)) and data and isinstance(data[0], string_types):
-                    self.asr.unsubscribe(to_naoqi_text("nao_assistant"))
-                    return to_text(data[0]).strip()
+                if (
+                    isinstance(data, (list, tuple))
+                    and len(data) >= 2
+                    and isinstance(data[0], string_types)
+                ):
+                    phrase = to_text(data[0]).strip()
+                    try:
+                        confidence = float(data[1])
+                    except (TypeError, ValueError):
+                        confidence = 0.0
+                    if phrase and confidence >= 0.4:
+                        return phrase
                 time.sleep(0.2)
-            self.asr.unsubscribe(to_naoqi_text("nao_assistant"))
         except Exception as exc:
             logger.error("Erreur reconnaissance vocale : %s", exc)
+        finally:
+            if subscribed:
+                try:
+                    self.asr.unsubscribe(to_naoqi_text("nao_assistant"))
+                except Exception as exc:
+                    logger.warning("Impossible d'arrêter la reconnaissance vocale : %s", exc)
         return ""
